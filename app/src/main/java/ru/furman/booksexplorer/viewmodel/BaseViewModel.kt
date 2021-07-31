@@ -5,9 +5,9 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.furman.booksexplorer.model.ui.effect.UiEffect
-import ru.furman.booksexplorer.model.ui.event.UiEvent
-import ru.furman.booksexplorer.model.ui.state.UiState
+import ru.furman.booksexplorer.model.ui.UiEffect
+import ru.furman.booksexplorer.model.ui.UiEvent
+import ru.furman.booksexplorer.model.ui.UiState
 import ru.furman.booksexplorer.utils.SingleLiveEvent
 
 abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect> : ViewModel() {
