@@ -5,14 +5,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.furman.booksexplorer.ui.Screens
 import ru.furman.booksexplorer.ui.main.MainScreen
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +45,8 @@ class MainActivity : ComponentActivity() {
             modifier = modifier
         ) {
             composable(Screens.MAIN.name) {
-                MainScreen()
+                val booksViewModel: BooksViewModel = hiltViewModel()
+                MainScreen(booksViewModel)
             }
             composable(Screens.DETAILS.name) {
 

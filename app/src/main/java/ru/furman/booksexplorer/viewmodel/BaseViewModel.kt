@@ -22,7 +22,7 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
 
     abstract fun handleEvent(event: Event)
 
-    protected abstract fun createInitialState(): State
+    abstract fun createInitialState(): State
 
     @MainThread
     @CallSuper

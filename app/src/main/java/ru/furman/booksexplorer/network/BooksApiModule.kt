@@ -26,7 +26,7 @@ class BooksApiModule {
 
     companion object {
 
-        private const val API_DOMAIN = "https://fakerapi.it/api"
+        private const val API_DOMAIN = "https://fakerapi.it/api/"
 
     }
 

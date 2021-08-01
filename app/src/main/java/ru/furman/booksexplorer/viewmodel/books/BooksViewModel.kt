@@ -1,8 +1,8 @@
 package ru.furman.booksexplorer.viewmodel.books
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,10 +19,6 @@ class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val booksMapper: BooksMapper
 ) : BaseViewModel<BooksUiState, BooksUiEvent, EmptyUiEffect>() {
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-        setState(BooksUiState.Error)
-    }
 
     init {
         loadBooks()
@@ -41,10 +37,17 @@ class BooksViewModel @Inject constructor(
 
     private fun loadBooks() {
         setState(BooksUiState.InProgress)
-        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            val state = booksMapper.getState(booksRepository.getBooks())
-            withContext(Dispatchers.Main) {
-                setState(state)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val state = booksMapper.getState(booksRepository.getBooks())
+                withContext(Dispatchers.Main) {
+                    setState(state)
+                }
+            } catch (e: Exception) {
+                Log.e("BooksViewModel", e.toString())
+                withContext(Dispatchers.Main) {
+                    setState(BooksUiState.Error)
+                }
             }
         }
     }
