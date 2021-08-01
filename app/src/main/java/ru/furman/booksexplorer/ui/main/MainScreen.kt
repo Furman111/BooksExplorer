@@ -3,6 +3,8 @@ package ru.furman.booksexplorer.ui.main
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -12,20 +14,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.domain.Book
+import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
 import ru.furman.booksexplorer.ui.common.CommonError
-import ru.furman.booksexplorer.ui.common.CommonProgress
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
 
 @Composable
 fun MainScreen(viewModel: BooksViewModel) {
-    StatesOf(viewModel) { state, effect ->
+    StatesOf(viewModel) { state, _ ->
         Surface {
-            Column {
+            Column(Modifier.fillMaxSize()) {
                 TopAppBar(
                     elevation = 4.dp
                 ) {
@@ -35,12 +39,36 @@ fun MainScreen(viewModel: BooksViewModel) {
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
-                when (state) {
-                    is BooksUiState.Idle -> {
-                        BooksCarousel(books = state.carouselBooks, onClick = {})
+                SwipeRefresh(
+                    modifier = Modifier.fillMaxSize(),
+                    state = rememberSwipeRefreshState(state is BooksUiState.InProgress),
+                    onRefresh = {
+                        viewModel.handleEvent(BooksUiEvent.SwipeToRefresh)
                     }
-                    BooksUiState.InProgress -> CommonProgress()
-                    BooksUiState.Error -> CommonError()
+                ) {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        when (state) {
+                            is BooksUiState.Idle -> {
+                                Content(
+                                    carouselBooks = state.carouselBooks,
+                                    listBooks = state.listBooks,
+                                    onClick = {}
+                                )
+                            }
+                            is BooksUiState.InProgress -> {
+                                Content(
+                                    carouselBooks = state.carouselBooks,
+                                    listBooks = state.listBooks,
+                                    onClick = {}
+                                )
+                            }
+                            BooksUiState.Error -> CommonError()
+                        }
+                    }
                 }
             }
         }
@@ -48,7 +76,19 @@ fun MainScreen(viewModel: BooksViewModel) {
 }
 
 @Composable
-fun BooksCarousel(books: List<Book>, onClick: (book: Book) -> Unit) {
+private fun Content(
+    carouselBooks: List<Book>,
+    listBooks: List<Book>,
+    onClick: (book: Book) -> Unit
+) {
+    BooksCarousel(carouselBooks, onClick)
+}
+
+@Composable
+private fun BooksCarousel(
+    books: List<Book>,
+    onClick: (book: Book) -> Unit
+) {
     LazyRow(
         Modifier
             .wrapContentHeight()

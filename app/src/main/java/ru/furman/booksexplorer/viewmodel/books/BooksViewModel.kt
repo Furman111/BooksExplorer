@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.furman.booksexplorer.mapper.BooksMapper
@@ -36,10 +37,11 @@ class BooksViewModel @Inject constructor(
     }
 
     private fun loadBooks() {
-        setState(BooksUiState.InProgress)
+        setState(booksMapper.getProgressState(state.value))
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val state = booksMapper.getState(booksRepository.getBooks())
+                delay(2000L)
+                val state = booksMapper.getIdleState(booksRepository.getBooks())
                 withContext(Dispatchers.Main) {
                     setState(state)
                 }
@@ -53,7 +55,7 @@ class BooksViewModel @Inject constructor(
     }
 
     override fun createInitialState(): BooksUiState {
-        return BooksUiState.InProgress
+        return booksMapper.getProgressState()
     }
 
 }

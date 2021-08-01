@@ -6,10 +6,17 @@ import javax.inject.Inject
 
 class BooksMapper @Inject constructor() {
 
-    fun getState(loadedBooks: List<Book>): BooksUiState.Idle {
+    fun getIdleState(loadedBooks: List<Book>): BooksUiState.Idle {
         return BooksUiState.Idle(
             carouselBooks = loadedBooks.take(CAROUSEL_BOOKS_COUNT),
             listBooks = loadedBooks.drop(CAROUSEL_BOOKS_COUNT)
+        )
+    }
+
+    fun getProgressState(currentState: BooksUiState? = null): BooksUiState.InProgress {
+        return BooksUiState.InProgress(
+            carouselBooks = (currentState as? BooksUiState.Idle)?.carouselBooks ?: emptyList(),
+            listBooks = (currentState as? BooksUiState.Idle)?.listBooks ?: emptyList(),
         )
     }
 
