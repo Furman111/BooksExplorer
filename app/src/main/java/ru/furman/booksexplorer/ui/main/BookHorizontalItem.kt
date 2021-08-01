@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.furman.booksexplorer.R
@@ -38,11 +39,13 @@ fun BookHorizontalItem(book: Book, modifier: Modifier = Modifier, onClick: (Book
                 Text(
                     text = book.title,
                     style = MaterialTheme.typography.body1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = book.author,
                     style = MaterialTheme.typography.caption,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)

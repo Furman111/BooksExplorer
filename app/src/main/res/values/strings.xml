@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BooksExplorer</string>
     <string name="main_toolbar_title">Books to read</string>
+    <string name="common_error_title">Oops, something is wrong</string>
 </resources>
