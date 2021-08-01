@@ -10,6 +10,10 @@ class BooksRepositoryImpl @Inject constructor(
 
     override suspend fun getBooks(): List<Book> {
         return booksApi.getBooks(DEFAULT_BOOKS_COUNT).data
+            .map { book ->
+                val newImageUrl = book.imageUrl.replace("http", "https")
+                book.copy(imageUrl = newImageUrl)
+            }
     }
 
     companion object {

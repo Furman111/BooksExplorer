@@ -10,23 +10,32 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.furman.booksexplorer.R
+import coil.compose.rememberImagePainter
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 
 @Composable
-fun BookHorizontalItem(book: Book, modifier: Modifier = Modifier, onClick: (Book) -> Unit) {
+fun BookHorizontalItem(
+    book: Book,
+    modifier: Modifier = Modifier,
+    onClick: (Book) -> Unit
+) {
     Card(
         modifier = modifier
             .clickable { onClick(book) }
     ) {
         Row(Modifier.padding(8.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = rememberImagePainter(
+                    data = book.imageUrl,
+                    builder = {
+                        memoryCacheKey(book.toString())
+                        crossfade(true)
+                    }
+                ),
                 contentDescription = null,
                 modifier = Modifier.size(64.dp)
             )
