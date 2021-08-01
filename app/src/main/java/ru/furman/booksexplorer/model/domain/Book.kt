@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Book(
     val title: String,
-    val author: StrictMath,
+    val author: String,
     val genre: String,
     val description: String,
     val isbn: String,
