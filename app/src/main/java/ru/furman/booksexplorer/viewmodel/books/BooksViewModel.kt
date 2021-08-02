@@ -8,9 +8,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.furman.booksexplorer.mapper.BooksMapper
+import ru.furman.booksexplorer.model.ui.books.BooksUiEffect
 import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
-import ru.furman.booksexplorer.model.ui.common.EmptyUiEffect
 import ru.furman.booksexplorer.repository.BooksRepository
 import ru.furman.booksexplorer.viewmodel.BaseViewModel
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val booksMapper: BooksMapper
-) : BaseViewModel<BooksUiState, BooksUiEvent, EmptyUiEffect>() {
+) : BaseViewModel<BooksUiState, BooksUiEvent, BooksUiEffect>() {
 
     init {
         loadBooks()
@@ -28,7 +28,7 @@ class BooksViewModel @Inject constructor(
     override fun handleEvent(event: BooksUiEvent) {
         when (event) {
             is BooksUiEvent.BookClick -> {
-                //todo navigate to book details
+                setEffect(BooksUiEffect.NavigateToDetails(event.book))
             }
             BooksUiEvent.SwipeToRefresh -> {
                 loadBooks()

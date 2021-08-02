@@ -7,14 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.ui.Screens
+import ru.furman.booksexplorer.ui.details.DetailsScreen
 import ru.furman.booksexplorer.ui.main.MainScreen
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
-import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
+import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -45,11 +49,15 @@ class MainActivity : ComponentActivity() {
             modifier = modifier
         ) {
             composable(Screens.MAIN.name) {
-                val booksViewModel: BooksViewModel = hiltViewModel()
-                MainScreen(booksViewModel)
+                MainScreen(navController, hiltViewModel())
             }
-            composable(Screens.DETAILS.name) {
-
+            composable(
+                Screens.DETAILS.name,
+                arguments = listOf(navArgument(BookDetailsViewModel.ARG_BOOK) {
+                    type = NavType.ParcelableType(Book::class.java)
+                })
+            ) {
+                DetailsScreen(viewModel = hiltViewModel())
             }
         }
     }

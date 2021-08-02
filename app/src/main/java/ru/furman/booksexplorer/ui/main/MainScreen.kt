@@ -8,21 +8,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.domain.Book
+import ru.furman.booksexplorer.model.ui.books.BooksUiEffect
 import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
+import ru.furman.booksexplorer.ui.Screens
 import ru.furman.booksexplorer.ui.common.CommonError
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
+import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @Composable
-fun MainScreen(viewModel: BooksViewModel) {
-    StatesOf(viewModel) { state, _ ->
+fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
+    StatesOf(viewModel) { state, effect ->
         val carouselScrollState = rememberLazyListState()
+
+        effect?.let {
+            if (effect is BooksUiEffect.NavigateToDetails) {
+                navController.currentBackStackEntry?.arguments =
+                    bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
+                navController.navigate(Screens.DETAILS.name)
+            }
+        }
 
         BooksExplorerTheme {
             Surface {
@@ -43,13 +56,18 @@ fun MainScreen(viewModel: BooksViewModel) {
                                 modifier = Modifier
                                     .fillMaxSize()
                             ) {
+                                val onBookClick = { book: Book ->
+                                    viewModel.handleEvent(
+                                        BooksUiEvent.BookClick(book)
+                                    )
+                                }
                                 when (state) {
                                     is BooksUiState.Idle -> {
                                         lazyListContent(
                                             carouselBooks = state.carouselBooks,
                                             listBooks = state.listBooks,
                                             carouselScrollState = carouselScrollState,
-                                            onClick = {}
+                                            onClick = onBookClick
                                         )
                                     }
                                     is BooksUiState.InProgress -> {
@@ -57,7 +75,7 @@ fun MainScreen(viewModel: BooksViewModel) {
                                             carouselBooks = state.carouselBooks,
                                             listBooks = state.listBooks,
                                             carouselScrollState = carouselScrollState,
-                                            onClick = {}
+                                            onClick = onBookClick
                                         )
                                     }
                                     BooksUiState.Error -> Unit
@@ -94,7 +112,8 @@ private fun LazyListScope.lazyListContent(
         BooksCarousel(
             carouselBooks,
             carouselScrollState,
-            {})
+            onClick
+        )
     }
     items(listBooks) { book ->
         BookListItem(book, onClick)
