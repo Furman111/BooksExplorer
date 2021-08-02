@@ -36,7 +36,14 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
         LaunchedEffect(effect) {
             effect.collect { effect ->
                 if (effect is BooksUiEffect.NavigateToDetails) {
-                    navController.navigate(Screens.DETAILS.name)
+                    navController.navigate(Screens.DETAILS.name) {
+                        anim {
+                            enter = R.anim.fade_out
+                            exit = R.anim.fade_out
+                            popEnter = R.anim.fade_out
+                            popExit = R.anim.fade_out
+                        }
+                    }
                     navController.currentBackStackEntry?.arguments =
                         bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
                 }
