@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,14 +20,15 @@ import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 
 @Composable
-fun BookHorizontalItem(
+fun BookVerticalItem(
     book: Book,
     modifier: Modifier = Modifier,
     onClick: (Book) -> Unit
 ) {
     Card(
         modifier = modifier
-            .clickable { onClick(book) }
+            .clickable { onClick(book) },
+        shape = MaterialTheme.shapes.medium.copy(CornerSize(0.dp))
     ) {
         Row(
             Modifier.padding(8.dp),
@@ -41,7 +43,7 @@ fun BookHorizontalItem(
                     }
                 ),
                 contentDescription = null,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(200.dp)
             )
             Column(
                 Modifier
@@ -51,13 +53,13 @@ fun BookHorizontalItem(
             ) {
                 Text(
                     text = book.title,
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.h5,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = book.author,
-                    style = MaterialTheme.typography.caption,
+                    style = MaterialTheme.typography.h6,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -69,10 +71,10 @@ fun BookHorizontalItem(
 
 @Composable
 @Preview
-fun BookHorizontalItemPreview() {
+fun BookVerticalItemPreview() {
     val context = LocalContext.current
     BooksExplorerTheme {
-        BookHorizontalItem(
+        BookVerticalItem(
             book = Book(
                 title = "Evgeniy Onegin",
                 author = "Pushkin",

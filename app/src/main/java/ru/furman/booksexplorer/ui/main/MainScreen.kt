@@ -1,16 +1,8 @@
 package ru.furman.booksexplorer.ui.main
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,29 +35,33 @@ fun MainScreen(viewModel: BooksViewModel) {
                             viewModel.handleEvent(BooksUiEvent.SwipeToRefresh)
                         }
                     ) {
-                        Column(
-                            Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            when (state) {
-                                is BooksUiState.Idle -> {
-                                    Content(
-                                        carouselBooks = state.carouselBooks,
-                                        listBooks = state.listBooks,
-                                        carouselScrollState = carouselScrollState,
-                                        onClick = {}
-                                    )
+                        if (state is BooksUiState.Error) {
+                            CommonError()
+                        } else {
+                            LazyColumn(
+                                state = rememberLazyListState(),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                when (state) {
+                                    is BooksUiState.Idle -> {
+                                        lazyListContent(
+                                            carouselBooks = state.carouselBooks,
+                                            listBooks = state.listBooks,
+                                            carouselScrollState = carouselScrollState,
+                                            onClick = {}
+                                        )
+                                    }
+                                    is BooksUiState.InProgress -> {
+                                        lazyListContent(
+                                            carouselBooks = state.carouselBooks,
+                                            listBooks = state.listBooks,
+                                            carouselScrollState = carouselScrollState,
+                                            onClick = {}
+                                        )
+                                    }
+                                    BooksUiState.Error -> Unit
                                 }
-                                is BooksUiState.InProgress -> {
-                                    Content(
-                                        carouselBooks = state.carouselBooks,
-                                        listBooks = state.listBooks,
-                                        carouselScrollState = carouselScrollState,
-                                        onClick = {}
-                                    )
-                                }
-                                BooksUiState.Error -> CommonError()
                             }
                         }
                     }
@@ -88,14 +84,21 @@ private fun Toolbar() {
     }
 }
 
-@Composable
-private fun Content(
+private fun LazyListScope.lazyListContent(
     carouselBooks: List<Book>,
     listBooks: List<Book>,
     carouselScrollState: LazyListState,
     onClick: (book: Book) -> Unit
 ) {
-    BooksCarousel(carouselBooks, carouselScrollState, onClick)
+    item {
+        BooksCarousel(
+            carouselBooks,
+            carouselScrollState,
+            {})
+    }
+    items(listBooks) { book ->
+        BookListItem(book, onClick)
+    }
 }
 
 @Composable
@@ -122,6 +125,19 @@ private fun BooksCarousel(
     }
 }
 
+@Composable
+private fun BookListItem(book: Book, onClick: (book: Book) -> Unit) {
+    BookVerticalItem(
+        modifier = Modifier.padding(
+            horizontal = 16.dp,
+            vertical = 8.dp
+        ),
+        book = book,
+        onClick = onClick
+    )
+    Divider(Modifier.padding(start = 16.dp, end = 16.dp))
+}
+
 @Preview
 @Composable
 private fun BooksCarouselPreview() {
@@ -140,9 +156,27 @@ private fun BooksCarouselPreview() {
                 )
             },
             scrollState = rememberLazyListState(),
-            onClick = {
-                //todo
-            }
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun BooksListItemPreview() {
+    BooksExplorerTheme {
+        BookListItem(
+            book = Book(
+                title = "Evgeniy Onegin",
+                author = "Pushkin",
+                genre = "Roman",
+                description = "Cool cool cool Cool cool cool Cool cool cool Cool cool cool Cool cool cool Cool cool cool Cool cool cool Cool cool cool",
+                isbn = "123412535",
+                imageUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.labirint.ru%2Fbooks%2F669673%2F&psig=AOvVaw2Lx0h1Dmze0XREl4AtvWWu&ust=1627889904166000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCLDo9M6oj_ICFQAAAAAdAAAAABAD",
+                publishedDate = "213213",
+                publisher = "Piter"
+            ),
+            onClick = {}
         )
     }
 }
