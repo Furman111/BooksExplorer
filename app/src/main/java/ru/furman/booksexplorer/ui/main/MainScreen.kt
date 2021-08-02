@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,6 +14,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.flow.collect
 import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.model.ui.books.BooksUiEffect
@@ -31,11 +33,13 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     StatesOf(viewModel) { state, effect ->
         val carouselScrollState = rememberLazyListState()
 
-        effect?.let {
-            if (effect is BooksUiEffect.NavigateToDetails) {
-                navController.currentBackStackEntry?.arguments =
-                    bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
-                navController.navigate(Screens.DETAILS.name)
+        LaunchedEffect(effect) {
+            effect.collect { effect ->
+                if (effect is BooksUiEffect.NavigateToDetails) {
+                    navController.navigate(Screens.DETAILS.name)
+                    navController.currentBackStackEntry?.arguments =
+                        bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
+                }
             }
         }
 

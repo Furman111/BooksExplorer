@@ -1,8 +1,9 @@
 package ru.furman.booksexplorer.utils
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import kotlinx.coroutines.flow.Flow
 import ru.furman.booksexplorer.model.ui.UiEffect
 import ru.furman.booksexplorer.model.ui.UiEvent
 import ru.furman.booksexplorer.model.ui.UiState
@@ -11,9 +12,8 @@ import ru.furman.booksexplorer.viewmodel.BaseViewModel
 @Composable
 fun <State : UiState, Event : UiEvent, Effect : UiEffect> StatesOf(
     viewModel: BaseViewModel<State, Event, Effect>,
-    block: @Composable (state: State, effect: Effect?) -> Unit
+    block: @Composable (state: State, effects: Flow<Effect?>) -> Unit
 ) {
-    val state by viewModel.state.observeAsState(viewModel.currentState)
-    val effect by viewModel.effects.observeAsState()
-    block(state, effect)
+    val state by viewModel.state.collectAsState(viewModel.currentState)
+    block(state, viewModel.effects)
 }
