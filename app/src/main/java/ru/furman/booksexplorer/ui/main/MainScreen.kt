@@ -2,7 +2,8 @@ package ru.furman.booksexplorer.ui.main
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +20,7 @@ import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
 import ru.furman.booksexplorer.ui.Screens
 import ru.furman.booksexplorer.ui.common.CommonError
+import ru.furman.booksexplorer.ui.common.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
@@ -40,7 +42,7 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
         BooksExplorerTheme {
             Surface {
                 Column(Modifier.fillMaxSize()) {
-                    Toolbar()
+                    Toolbar(title = stringResource(id = R.string.main_toolbar_title))
                     SwipeRefresh(
                         modifier = Modifier.fillMaxSize(),
                         state = rememberSwipeRefreshState(state is BooksUiState.InProgress),
@@ -86,19 +88,6 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun Toolbar() {
-    TopAppBar(
-        elevation = 4.dp
-    ) {
-        Text(
-            text = stringResource(id = R.string.main_toolbar_title),
-            style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
     }
 }
 

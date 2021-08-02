@@ -20,13 +20,23 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
         get() = _effect
     private val _effect = SingleLiveEvent<Effect>()
 
+    val currentState: State
+        get() {
+            if (!::_currentState.isInitialized) {
+                _currentState = createInitialState()
+            }
+            return _currentState
+        }
+    private lateinit var _currentState: State
+
     abstract fun handleEvent(event: Event)
 
-    abstract fun createInitialState(): State
+    protected abstract fun createInitialState(): State
 
     @MainThread
     @CallSuper
     protected fun setState(state: State) {
+        _currentState = state
         _state.value = state
     }
 

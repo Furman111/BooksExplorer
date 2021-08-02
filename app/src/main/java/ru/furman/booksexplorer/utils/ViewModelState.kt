@@ -13,7 +13,7 @@ fun <State : UiState, Event : UiEvent, Effect : UiEffect> StatesOf(
     viewModel: BaseViewModel<State, Event, Effect>,
     block: @Composable (state: State, effect: Effect?) -> Unit
 ) {
-    val state by viewModel.state.observeAsState(viewModel.createInitialState())
+    val state by viewModel.state.observeAsState(viewModel.currentState)
     val effect by viewModel.effects.observeAsState()
     block(state, effect)
 }

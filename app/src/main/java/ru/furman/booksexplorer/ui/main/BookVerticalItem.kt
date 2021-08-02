@@ -59,7 +59,7 @@ fun BookVerticalItem(
                 )
                 Text(
                     text = book.author,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()

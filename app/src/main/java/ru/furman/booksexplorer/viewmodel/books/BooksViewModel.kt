@@ -37,7 +37,7 @@ class BooksViewModel @Inject constructor(
     }
 
     private fun loadBooks() {
-        setState(booksMapper.getProgressState(state.value))
+        setState(booksMapper.getProgressState(currentState))
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 delay(1500L)

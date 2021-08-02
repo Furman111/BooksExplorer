@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.ui.Screens
@@ -23,6 +24,7 @@ import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -30,6 +32,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @ExperimentalPagerApi
     @Composable
     fun BooksExplorerApp() {
         BooksExplorerTheme {
@@ -38,6 +41,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @ExperimentalPagerApi
     @Composable
     fun BooksExplorerNavHost(
         navController: NavHostController,
