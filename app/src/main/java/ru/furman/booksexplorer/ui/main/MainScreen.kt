@@ -1,13 +1,18 @@
 package ru.furman.booksexplorer.ui.main
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
@@ -108,16 +113,35 @@ private fun LazyListScope.lazyListContent(
     carouselScrollState: LazyListState,
     onClick: (book: Book) -> Unit
 ) {
-    item {
-        BooksCarousel(
-            carouselBooks,
-            carouselScrollState,
-            onClick
-        )
+    if (carouselBooks.isNotEmpty()) {
+        item {
+            Header(textRes = R.string.main_carousel_title)
+        }
+        item {
+            BooksCarousel(
+                carouselBooks,
+                carouselScrollState,
+                onClick
+            )
+        }
     }
-    items(listBooks) { book ->
-        BookListItem(book, onClick)
+    if (listBooks.isNotEmpty()) {
+        item {
+            Header(textRes = R.string.main_list_title)
+        }
+        items(listBooks) { book ->
+            BookListItem(book, onClick)
+        }
     }
+}
+
+@Composable
+private fun Header(@StringRes textRes: Int) {
+    Text(
+        modifier = Modifier.padding(16.dp),
+        text = LocalContext.current.getString(textRes),
+        style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)
+    )
 }
 
 @Composable

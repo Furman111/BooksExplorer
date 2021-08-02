@@ -2,6 +2,7 @@ package ru.furman.booksexplorer.ui.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,9 +30,14 @@ fun DetailsScreen(viewModel: BookDetailsViewModel) {
                     verticalAlignment = Alignment.Top
                 ) { page ->
                     if (page == 0) {
-                        FirstPageScreen(Modifier.padding(16.dp), state.firstPage)
+                        DetailsFirstPageScreen(Modifier.padding(16.dp), state.firstPage)
                     } else {
-                        FirstPageScreen(Modifier.padding(16.dp), state.firstPage)
+                        DetailsSecondPageScreen(
+                            Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            state.secondPage
+                        )
                     }
                 }
             }

@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">BooksExplorer</string>
     <string name="main_toolbar_title">Books to read</string>
+    <string name="main_carousel_title">Bestsellers</string>
+    <string name="main_list_title">All books</string>
     <string name="common_error_title">Oops, something is wrong</string>
+    <string name="book_details_isbn">isbn:</string>
+    <string name="book_details_published_date">Published:</string>
+    <string name="book_details_publisher">Publisher:</string>
 </resources>

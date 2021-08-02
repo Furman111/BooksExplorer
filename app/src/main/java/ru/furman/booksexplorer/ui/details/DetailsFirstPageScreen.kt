@@ -18,7 +18,7 @@ import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 
 @Composable
-fun FirstPageScreen(
+fun DetailsFirstPageScreen(
     modifier: Modifier = Modifier,
     firstPage: BookDetailsUiState.FistPage,
 ) {
@@ -58,7 +58,7 @@ fun FirstPageScreen(
 @Preview
 fun FirstPageScreenPreview() {
     BooksExplorerTheme {
-        FirstPageScreen(
+        DetailsFirstPageScreen(
             Modifier.padding(16.dp),
             firstPage = BookDetailsUiState.FistPage(
                 title = "Evgeniy Onegin",
