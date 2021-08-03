@@ -7,4 +7,6 @@
     <string name="book_details_isbn">isbn:</string>
     <string name="book_details_published_date">Published:</string>
     <string name="book_details_publisher">Publisher:</string>
+    <string name="book_details_overview_tab">Overview</string>
+    <string name="book_details_details_tab">Details</string>
 </resources>
