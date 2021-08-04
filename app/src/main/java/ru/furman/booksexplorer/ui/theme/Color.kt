@@ -2,7 +2,8 @@ package ru.furman.booksexplorer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Purple200 = Color(0xFF3f51b5)
+val Purple500 = Color(0xff303f9f)
+val Cyan200 = Color(0xff64ffda)
+val Cyan500 = Color(0xFF1FB893)
+val Text = Color(0xFF212121)

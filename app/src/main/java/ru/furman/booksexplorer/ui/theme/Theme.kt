@@ -2,35 +2,45 @@ package ru.furman.booksexplorer.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import ru.furman.booksexplorer.R
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primaryVariant = Purple500,
+    secondary = Cyan200
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = Purple200,
+    primaryVariant = Purple500,
+    secondary = Cyan200,
+    secondaryVariant = Cyan500,
+    onSecondary = Text,
+    onBackground = Text,
+    onSurface = Text
+)
 
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+private val Stix = FontFamily(
+    Font(R.font.stix_bold, FontWeight.Bold),
+    Font(R.font.stix_medium, FontWeight.Medium),
+    Font(R.font.stix_regular, FontWeight.Normal),
+    Font(R.font.stix_semibold, FontWeight.SemiBold)
 )
 
 @Composable
 fun BooksExplorerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
         DarkColorPalette
@@ -38,9 +48,22 @@ fun BooksExplorerTheme(
         LightColorPalette
     }
 
+    val systemUiController = rememberSystemUiController()
+
+    key(darkTheme) {
+        systemUiController.setStatusBarColor(
+            color = if (darkTheme) {
+                Color.Black
+            } else {
+                colors.primaryVariant
+            },
+            darkIcons = false
+        )
+    }
+
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = Typography(defaultFontFamily = Stix),
         shapes = Shapes,
         content = content
     )
