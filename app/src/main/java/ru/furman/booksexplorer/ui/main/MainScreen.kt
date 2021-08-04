@@ -120,10 +120,10 @@ private fun LazyListScope.lazyListContent(
     onClick: (book: Book) -> Unit
 ) {
     if (carouselBooks.isNotEmpty()) {
-        stickyHeader("header_1") {
+        stickyHeader("bestsellers_header") {
             Header(textRes = R.string.main_carousel_title)
         }
-        item {
+        item(key = "bestsellers_carousel") {
             BooksCarousel(
                 carouselBooks,
                 carouselScrollState,
@@ -132,10 +132,10 @@ private fun LazyListScope.lazyListContent(
         }
     }
     if (listBooks.isNotEmpty()) {
-        stickyHeader("header_2") {
+        stickyHeader("all_books_header") {
             Header(textRes = R.string.main_list_title)
         }
-        items(listBooks) { book ->
+        items(listBooks, key = { item: Book -> item.toString() }) { book ->
             BookListItem(book, onClick)
         }
     }
@@ -171,7 +171,7 @@ private fun BooksCarousel(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(books) { book ->
+        items(books, key = { book -> book.toString() }) { book ->
             BookHorizontalItem(
                 modifier = Modifier.width(250.dp),
                 book = book,
