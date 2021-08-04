@@ -1,15 +1,16 @@
 package ru.furman.booksexplorer.ui.main
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,7 +68,11 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                         }
                     ) {
                         if (state is BooksUiState.Error) {
-                            CommonError()
+                            CommonError(
+                                Modifier
+                                    .verticalScroll(rememberScrollState())
+                                    .fillMaxSize()
+                            )
                         } else {
                             LazyColumn(
                                 state = rememberLazyListState(),
@@ -107,6 +112,7 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 private fun LazyListScope.lazyListContent(
     carouselBooks: List<Book>,
     listBooks: List<Book>,
@@ -114,7 +120,7 @@ private fun LazyListScope.lazyListContent(
     onClick: (book: Book) -> Unit
 ) {
     if (carouselBooks.isNotEmpty()) {
-        item {
+        stickyHeader("header_1") {
             Header(textRes = R.string.main_carousel_title)
         }
         item {
@@ -126,7 +132,7 @@ private fun LazyListScope.lazyListContent(
         }
     }
     if (listBooks.isNotEmpty()) {
-        item {
+        stickyHeader("header_2") {
             Header(textRes = R.string.main_list_title)
         }
         items(listBooks) { book ->
@@ -137,11 +143,18 @@ private fun LazyListScope.lazyListContent(
 
 @Composable
 private fun Header(@StringRes textRes: Int) {
-    Text(
-        modifier = Modifier.padding(16.dp),
-        text = LocalContext.current.getString(textRes),
-        style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)
-    )
+    Surface(color = MaterialTheme.colors.primaryVariant.copy(alpha = ContentAlpha.medium)) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            text = LocalContext.current.getString(textRes),
+            style = MaterialTheme.typography.subtitle1.copy(
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        )
+    }
 }
 
 @Composable

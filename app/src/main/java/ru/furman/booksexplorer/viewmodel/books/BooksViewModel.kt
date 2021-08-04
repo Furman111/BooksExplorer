@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.furman.booksexplorer.mapper.BooksMapper
@@ -40,7 +39,6 @@ class BooksViewModel @Inject constructor(
         setState(booksMapper.getProgressState(currentState))
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                delay(1500L)
                 val state = booksMapper.getIdleState(booksRepository.getBooks())
                 withContext(Dispatchers.Main) {
                     setState(state)
