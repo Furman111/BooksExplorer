@@ -143,7 +143,7 @@ private fun LazyListScope.lazyListContent(
 
 @Composable
 private fun Header(@StringRes textRes: Int) {
-    Surface(color = MaterialTheme.colors.primaryVariant.copy(alpha = ContentAlpha.medium)) {
+    Surface(color = MaterialTheme.colors.primarySurface.copy(alpha = ContentAlpha.medium)) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()

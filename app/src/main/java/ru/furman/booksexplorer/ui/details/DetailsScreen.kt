@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEvent
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
@@ -48,6 +50,10 @@ private fun Content(
         Toolbar(title = state.toolbarTitle)
         val pagerState = rememberPagerState(pageCount = 2)
 
+        rememberCoroutineScope().launch {
+            pagerState.animateScrollToPage(if (state.isFirstPageSelected) 0 else 1)
+        }
+
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { onPageSelected(it) }
         }
@@ -70,7 +76,6 @@ private fun Content(
         }
     }
 }
-
 
 @Composable
 @ExperimentalPagerApi
