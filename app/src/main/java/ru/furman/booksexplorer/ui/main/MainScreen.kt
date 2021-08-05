@@ -128,7 +128,7 @@ private fun LazyListScope.lazyListContent(
         stickyHeader("all_books_header") {
             Header(textRes = R.string.main_list_title)
         }
-        items(listBooks, key = { item: Book -> item.toString() }) { book ->
+        items(listBooks, key = Book::toString) { book ->
             BookListItem(book, onClick)
         }
     }
@@ -164,7 +164,7 @@ private fun BooksCarousel(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(books, key = { book -> book.toString() }) { book ->
+        items(books, key = Book::toString) { book ->
             BookHorizontalItem(
                 modifier = Modifier.width(250.dp),
                 book = book,
