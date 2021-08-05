@@ -3,7 +3,7 @@ package ru.furman.booksexplorer.viewmodel.details
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.furman.booksexplorer.model.domain.Book
-import ru.furman.booksexplorer.model.ui.common.EmptyUiEffect
+import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEffect
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEvent
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
 import ru.furman.booksexplorer.viewmodel.BaseViewModel
@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<BookDetailsUiState, BookDetailsUiEvent, EmptyUiEffect>() {
+) : BaseViewModel<BookDetailsUiState, BookDetailsUiEvent, BookDetailsUiEffect>() {
 
     private val book: Book = savedStateHandle.get<Book>(ARG_BOOK)
         ?: throw IllegalArgumentException("Book must be present")
@@ -20,7 +20,7 @@ class BookDetailsViewModel @Inject constructor(
     override fun handleEvent(event: BookDetailsUiEvent) {
         when (event) {
             BookDetailsUiEvent.OnBackPressed -> {
-                //todo
+                setEffect(BookDetailsUiEffect.NavigateBack)
             }
             is BookDetailsUiEvent.PageSelected -> {
                 setState(currentState.copy(isFirstPageSelected = event.page == 0))

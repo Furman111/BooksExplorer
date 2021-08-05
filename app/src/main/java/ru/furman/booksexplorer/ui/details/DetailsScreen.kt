@@ -14,26 +14,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.furman.booksexplorer.R
+import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEffect
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEvent
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
-import ru.furman.booksexplorer.ui.common.Toolbar
+import ru.furman.booksexplorer.ui.component.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @Composable
 @ExperimentalPagerApi
-fun DetailsScreen(viewModel: BookDetailsViewModel) {
-    StatesOf(viewModel = viewModel) { state, _ ->
+fun DetailsScreen(navController: NavController, viewModel: BookDetailsViewModel) {
+    StatesOf(viewModel = viewModel) { state, effects ->
+        CollectEffects(effects) { effect ->
+            if (effect == BookDetailsUiEffect.NavigateBack) {
+                navController.popBackStack()
+            }
+        }
+
         BooksExplorerTheme {
             Content(
                 state = state,
                 onPageSelected = { page ->
                     viewModel.handleEvent(BookDetailsUiEvent.PageSelected(page))
+                },
+                onBackButtonClick = {
+                    viewModel.handleEvent(BookDetailsUiEvent.OnBackPressed)
                 }
             )
         }
@@ -44,10 +56,15 @@ fun DetailsScreen(viewModel: BookDetailsViewModel) {
 @ExperimentalPagerApi
 private fun Content(
     state: BookDetailsUiState,
-    onPageSelected: (Int) -> Unit
+    onPageSelected: (Int) -> Unit,
+    onBackButtonClick: () -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
-        Toolbar(title = state.toolbarTitle)
+        Toolbar(
+            title = state.toolbarTitle,
+            showBackIcon = true,
+            onBackIconClicked = onBackButtonClick
+        )
         val pagerState = rememberPagerState(pageCount = 2)
 
         rememberCoroutineScope().launch {
@@ -126,7 +143,8 @@ private fun DetailsScreenPreview() {
                     ),
                     isFirstPageSelected = true
                 ),
-                onPageSelected = {}
+                onPageSelected = {},
+                onBackButtonClick = {}
             )
         }
     }

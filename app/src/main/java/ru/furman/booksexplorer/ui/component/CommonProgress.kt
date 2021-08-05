@@ -1,4 +1,4 @@
-package ru.furman.booksexplorer.ui.common
+package ru.furman.booksexplorer.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight

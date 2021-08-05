@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     type = NavType.ParcelableType(Book::class.java)
                 })
             ) {
-                DetailsScreen(viewModel = hiltViewModel())
+                DetailsScreen(viewModel = hiltViewModel(), navController = navController)
             }
         }
     }
