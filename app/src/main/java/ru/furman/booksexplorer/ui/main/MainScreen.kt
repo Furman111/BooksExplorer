@@ -43,7 +43,6 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     StatesOf(viewModel) { state, effects ->
         val carouselScrollState = rememberLazyListState()
         val lazyListState = rememberLazyListState()
-        val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
 
         CollectEffects(effects) { effect ->
             when (effect) {
@@ -75,7 +74,7 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                         }
 
                         when (state) {
-                            is BooksUiState.Error -> {
+                            BooksUiState.Error -> {
                                 CommonError(
                                     Modifier
                                         .verticalScroll(rememberScrollState())
@@ -83,6 +82,7 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                                 )
                             }
                             is BooksUiState.Stable -> {
+                                val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
                                 LazyColumn(
                                     state = lazyListState,
                                     modifier = Modifier

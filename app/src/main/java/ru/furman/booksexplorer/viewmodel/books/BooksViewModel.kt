@@ -64,7 +64,7 @@ class BooksViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("BooksViewModel", e.toString())
                 withContext(Dispatchers.Main) {
-                    setState(BooksUiState.Error(booksFlow))
+                    setState(BooksUiState.Error)
                 }
             }
         }
