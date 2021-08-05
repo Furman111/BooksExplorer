@@ -7,16 +7,14 @@ import ru.furman.booksexplorer.model.ui.UiState
 
 sealed class BooksUiState : UiState {
 
-    data class InProgress(
-        val carouselBooks: List<Book> = emptyList(),
-        val booksFlow: Flow<PagingData<Book>>
-    ) : BooksUiState()
+    abstract val booksFlow: Flow<PagingData<Book>>
 
-    data class Idle(
+    data class Stable(
         val carouselBooks: List<Book>,
-        val booksFlow: Flow<PagingData<Book>>
+        override val booksFlow: Flow<PagingData<Book>>,
+        val isUpdating: Boolean
     ) : BooksUiState()
 
-    object Error : BooksUiState()
+    data class Error(override val booksFlow: Flow<PagingData<Book>>) : BooksUiState()
 
 }

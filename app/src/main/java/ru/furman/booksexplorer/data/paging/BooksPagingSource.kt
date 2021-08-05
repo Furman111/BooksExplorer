@@ -4,11 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.furman.booksexplorer.data.repository.BooksRepository
 import ru.furman.booksexplorer.model.domain.Book
-import javax.inject.Inject
 
-class BooksPagingSource @Inject constructor(
-    private val booksRepository: BooksRepository
-) : PagingSource<Int, Book>() {
+class BooksPagingSource(private val booksRepository: BooksRepository) : PagingSource<Int, Book>() {
 
     override fun getRefreshKey(state: PagingState<Int, Book>): Int? {
         return null

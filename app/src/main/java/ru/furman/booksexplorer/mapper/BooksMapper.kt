@@ -11,20 +11,22 @@ class BooksMapper @Inject constructor() {
     fun getIdleState(
         booksFlow: Flow<PagingData<Book>>,
         carouselBooks: List<Book>
-    ): BooksUiState.Idle {
-        return BooksUiState.Idle(
+    ): BooksUiState.Stable {
+        return BooksUiState.Stable(
             carouselBooks = carouselBooks.take(CAROUSEL_BOOKS_COUNT),
-            booksFlow = booksFlow
+            booksFlow = booksFlow,
+            isUpdating = false
         )
     }
 
     fun getProgressState(
         booksFlow: Flow<PagingData<Book>>,
         currentState: BooksUiState? = null
-    ): BooksUiState.InProgress {
-        return BooksUiState.InProgress(
-            carouselBooks = (currentState as? BooksUiState.Idle)?.carouselBooks ?: emptyList(),
-            booksFlow = booksFlow
+    ): BooksUiState.Stable {
+        return BooksUiState.Stable(
+            carouselBooks = (currentState as? BooksUiState.Stable)?.carouselBooks ?: emptyList(),
+            booksFlow = booksFlow,
+            isUpdating = true
         )
     }
 

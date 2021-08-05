@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemsIndexed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.furman.booksexplorer.R
@@ -43,12 +43,15 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     StatesOf(viewModel) { state, effects ->
         val carouselScrollState = rememberLazyListState()
         val lazyListState = rememberLazyListState()
+        val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
 
         CollectEffects(effects) { effect ->
-            if (effect is BooksUiEffect.NavigateToDetails) {
-                navController.navigate(Screens.DETAILS.name)
-                navController.currentBackStackEntry?.arguments =
-                    bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
+            when (effect) {
+                is BooksUiEffect.NavigateToDetails -> {
+                    navController.navigate(Screens.DETAILS.name)
+                    navController.currentBackStackEntry?.arguments =
+                        bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
+                }
             }
         }
 
@@ -58,7 +61,9 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                     Toolbar(title = stringResource(id = R.string.main_toolbar_title))
                     SwipeRefresh(
                         modifier = Modifier.fillMaxSize(),
-                        state = rememberSwipeRefreshState(state is BooksUiState.InProgress),
+                        state = rememberSwipeRefreshState(
+                            (state as? BooksUiState.Stable)?.isUpdating ?: false
+                        ),
                         onRefresh = {
                             viewModel.handleEvent(BooksUiEvent.SwipeToRefresh)
                         }
@@ -70,30 +75,14 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                         }
 
                         when (state) {
-                            BooksUiState.Error -> {
+                            is BooksUiState.Error -> {
                                 CommonError(
                                     Modifier
                                         .verticalScroll(rememberScrollState())
                                         .fillMaxSize()
                                 )
                             }
-                            is BooksUiState.Idle -> {
-                                val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
-                                LazyColumn(
-                                    state = lazyListState,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                ) {
-                                    lazyListContent(
-                                        carouselBooks = state.carouselBooks,
-                                        booksPagingItems = booksPagingItems,
-                                        carouselScrollState = carouselScrollState,
-                                        onClick = onBookClick
-                                    )
-                                }
-                            }
-                            is BooksUiState.InProgress -> {
-                                val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
+                            is BooksUiState.Stable -> {
                                 LazyColumn(
                                     state = lazyListState,
                                     modifier = Modifier
@@ -135,14 +124,14 @@ private fun LazyListScope.lazyListContent(
         }
     }
 
-    if (booksPagingItems.loadState.refresh != LoadState.Loading) {
+    if (booksPagingItems.itemCount > 0) {
         stickyHeader("all_books_header") {
             Header(textRes = R.string.main_list_title)
         }
     }
-    items(booksPagingItems, key = Book::toString) { book ->
+    itemsIndexed(booksPagingItems, key = { _, book -> book.toString() }) { index, book ->
         if (book != null) {
-            BookListItem(book, onClick)
+            BookListItem(book, onClick, index != booksPagingItems.itemCount - 1)
         }
     }
 
@@ -201,7 +190,7 @@ private fun BooksCarousel(
 }
 
 @Composable
-private fun BookListItem(book: Book, onClick: (book: Book) -> Unit) {
+private fun BookListItem(book: Book, onClick: (book: Book) -> Unit, drawDivider: Boolean) {
     BookVerticalItem(
         modifier = Modifier.padding(
             horizontal = 16.dp,
@@ -210,7 +199,9 @@ private fun BookListItem(book: Book, onClick: (book: Book) -> Unit) {
         book = book,
         onClick = onClick
     )
-    Divider(Modifier.padding(start = 16.dp, end = 16.dp))
+    if (drawDivider) {
+        Divider(Modifier.padding(start = 16.dp))
+    }
 }
 
 @Preview
@@ -251,7 +242,8 @@ private fun BooksListItemPreview() {
                 publishedDate = "213213",
                 publisher = "Piter"
             ),
-            onClick = {}
+            onClick = {},
+            drawDivider = true
         )
     }
 }

@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
-    private val booksPagingSource: BooksPagingSource,
     private val booksRepository: BooksRepository,
     private val booksMapper: BooksMapper
 ) : BaseViewModel<BooksUiState, BooksUiEvent, BooksUiEffect>() {
@@ -32,9 +31,11 @@ class BooksViewModel @Inject constructor(
             enablePlaceholders = false,
             initialLoadSize = 10
         )
-    ) { booksPagingSource }
+    ) { BooksPagingSource(booksRepository).also(::booksPagingSource::set) }
         .flow
         .cachedIn(viewModelScope)
+
+    private lateinit var booksPagingSource: BooksPagingSource
 
     init {
         loadBooks()
@@ -46,7 +47,8 @@ class BooksViewModel @Inject constructor(
                 setEffect(BooksUiEffect.NavigateToDetails(event.book))
             }
             BooksUiEvent.SwipeToRefresh -> {
-                //todo
+                booksPagingSource.invalidate()
+                loadBooks()
             }
         }
     }
@@ -62,7 +64,7 @@ class BooksViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("BooksViewModel", e.toString())
                 withContext(Dispatchers.Main) {
-                    setState(BooksUiState.Error)
+                    setState(BooksUiState.Error(booksFlow))
                 }
             }
         }
