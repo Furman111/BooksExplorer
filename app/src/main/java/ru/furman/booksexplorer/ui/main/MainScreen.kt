@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -17,6 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.furman.booksexplorer.R
@@ -37,6 +42,7 @@ import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     StatesOf(viewModel) { state, effects ->
         val carouselScrollState = rememberLazyListState()
+        val lazyListState = rememberLazyListState()
 
         CollectEffects(effects) { effect ->
             if (effect is BooksUiEffect.NavigateToDetails) {
@@ -57,41 +63,48 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
                             viewModel.handleEvent(BooksUiEvent.SwipeToRefresh)
                         }
                     ) {
-                        if (state is BooksUiState.Error) {
-                            CommonError(
-                                Modifier
-                                    .verticalScroll(rememberScrollState())
-                                    .fillMaxSize()
+                        val onBookClick = { book: Book ->
+                            viewModel.handleEvent(
+                                BooksUiEvent.BookClick(book)
                             )
-                        } else {
-                            LazyColumn(
-                                state = rememberLazyListState(),
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                val onBookClick = { book: Book ->
-                                    viewModel.handleEvent(
-                                        BooksUiEvent.BookClick(book)
+                        }
+
+                        when (state) {
+                            BooksUiState.Error -> {
+                                CommonError(
+                                    Modifier
+                                        .verticalScroll(rememberScrollState())
+                                        .fillMaxSize()
+                                )
+                            }
+                            is BooksUiState.Idle -> {
+                                val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
+                                LazyColumn(
+                                    state = lazyListState,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                ) {
+                                    lazyListContent(
+                                        carouselBooks = state.carouselBooks,
+                                        booksPagingItems = booksPagingItems,
+                                        carouselScrollState = carouselScrollState,
+                                        onClick = onBookClick
                                     )
                                 }
-                                when (state) {
-                                    is BooksUiState.Idle -> {
-                                        lazyListContent(
-                                            carouselBooks = state.carouselBooks,
-                                            listBooks = state.listBooks,
-                                            carouselScrollState = carouselScrollState,
-                                            onClick = onBookClick
-                                        )
-                                    }
-                                    is BooksUiState.InProgress -> {
-                                        lazyListContent(
-                                            carouselBooks = state.carouselBooks,
-                                            listBooks = state.listBooks,
-                                            carouselScrollState = carouselScrollState,
-                                            onClick = onBookClick
-                                        )
-                                    }
-                                    BooksUiState.Error -> Unit
+                            }
+                            is BooksUiState.InProgress -> {
+                                val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
+                                LazyColumn(
+                                    state = lazyListState,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                ) {
+                                    lazyListContent(
+                                        carouselBooks = state.carouselBooks,
+                                        booksPagingItems = booksPagingItems,
+                                        carouselScrollState = carouselScrollState,
+                                        onClick = onBookClick
+                                    )
                                 }
                             }
                         }
@@ -105,7 +118,7 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
 @OptIn(ExperimentalFoundationApi::class)
 private fun LazyListScope.lazyListContent(
     carouselBooks: List<Book>,
-    listBooks: List<Book>,
+    booksPagingItems: LazyPagingItems<Book>,
     carouselScrollState: LazyListState,
     onClick: (book: Book) -> Unit
 ) {
@@ -121,12 +134,28 @@ private fun LazyListScope.lazyListContent(
             )
         }
     }
-    if (listBooks.isNotEmpty()) {
+
+    if (booksPagingItems.loadState.refresh != LoadState.Loading) {
         stickyHeader("all_books_header") {
             Header(textRes = R.string.main_list_title)
         }
-        items(listBooks, key = Book::toString) { book ->
+    }
+    items(booksPagingItems, key = Book::toString) { book ->
+        if (book != null) {
             BookListItem(book, onClick)
+        }
+    }
+
+    if (booksPagingItems.loadState.append == LoadState.Loading) {
+        item("append_load_progress") {
+            Surface(Modifier.padding(top = 8.dp, bottom = 8.dp)) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                    color = MaterialTheme.colors.onSurface
+                )
+            }
         }
     }
 }

@@ -7,6 +7,9 @@ import ru.furman.booksexplorer.model.dto.BooksResponseDTO
 interface BooksApi {
 
     @GET("v1/books")
-    suspend fun getBooks(@Query("_quantity") count: Int): BooksResponseDTO
+    suspend fun getBooks(
+        @Query("_seed") page: Int,
+        @Query("_quantity") pageSize: Int
+    ): BooksResponseDTO
 
 }

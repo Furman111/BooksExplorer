@@ -1,4 +1,4 @@
-package ru.furman.booksexplorer.repository
+package ru.furman.booksexplorer.data.repository
 
 import dagger.Binds
 import dagger.Module
