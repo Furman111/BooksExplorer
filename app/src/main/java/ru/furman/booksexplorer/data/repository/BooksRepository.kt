@@ -8,6 +8,8 @@ interface BooksRepository {
 
     suspend fun loadBooks(page: Int = 0, pageSize: Int = DEFAULT_PAGE_SIZE): List<Book>
 
+    suspend fun searchBooks(request: String): List<Book>
+
     companion object {
 
         const val DEFAULT_PAGE_SIZE = 10

@@ -1,6 +1,5 @@
 package ru.furman.booksexplorer.data.repository
 
-import kotlinx.coroutines.delay
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.network.BooksApi
 import javax.inject.Inject
@@ -16,8 +15,12 @@ class BooksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadBooks(page: Int, pageSize: Int): List<Book> {
-        delay(3000L)
         return booksApi.getBooks(page = page, pageSize = pageSize).data
+            .map(::processImage)
+    }
+
+    override suspend fun searchBooks(request: String): List<Book> {
+        return booksApi.getBooks(page = request.toInt(), pageSize = SEARCH_BOOKS_COUNT).data
             .map(::processImage)
     }
 
@@ -31,6 +34,8 @@ class BooksRepositoryImpl @Inject constructor(
         private const val CAROUSEL_BOOKS_SEED = 101
 
         private const val CAROUSEL_BOOKS_COUNT = 10
+
+        private const val SEARCH_BOOKS_COUNT = 20
 
     }
 
