@@ -1,24 +1,24 @@
 package ru.furman.booksexplorer.ui.search
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiEvent
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiState
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.search.SearchBooksViewModel
 
+@ExperimentalComposeUiApi
 @Composable
 fun SearchScreen(viewModel: SearchBooksViewModel) {
     StatesOf(viewModel = viewModel) { state, _ ->
@@ -31,11 +31,14 @@ fun SearchScreen(viewModel: SearchBooksViewModel) {
     }
 }
 
+@ExperimentalComposeUiApi
 @Composable
 private fun SearchInput(
     state: BooksSearchUiState,
     onValueChanged: (String) -> Unit
 ) {
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     TextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,8 +49,17 @@ private fun SearchInput(
         leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
         trailingIcon = {
             if (state is BooksSearchUiState.Stable && state.isLoading) {
-                Icon(Icons.Filled.Refresh, contentDescription = null)
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(24.dp),
+                    strokeWidth = 2.dp
+                )
             }
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions {
+            softwareKeyboardController?.hide()
+            focusManager.clearFocus()
         },
         isError = state is BooksSearchUiState.Error,
         singleLine = true

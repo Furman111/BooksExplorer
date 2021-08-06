@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +29,7 @@ import ru.furman.booksexplorer.ui.search.SearchScreen
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
+@ExperimentalComposeUiApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
