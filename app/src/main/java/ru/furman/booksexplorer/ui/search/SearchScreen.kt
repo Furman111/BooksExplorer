@@ -1,6 +1,10 @@
 package ru.furman.booksexplorer.ui.search
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -8,24 +12,57 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiEvent
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiState
+import ru.furman.booksexplorer.ui.component.CommonError
+import ru.furman.booksexplorer.ui.main.BookListItem
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.search.SearchBooksViewModel
 
 @Composable
 fun SearchScreen(viewModel: SearchBooksViewModel) {
     StatesOf(viewModel = viewModel) { state, _ ->
+        val lazyListState = rememberLazyListState()
+
         Surface(Modifier.fillMaxSize()) {
             Column(Modifier.fillMaxSize()) {
                 SearchInput(state) { viewModel.handleEvent(BooksSearchUiEvent.NewSearchRequest(it)) }
+                when (state) {
+                    is BooksSearchUiState.Stable -> SearchResultList(lazyListState, state, {})
+                    is BooksSearchUiState.Error -> CommonError(modifier = Modifier.fillMaxSize())
+                }
             }
         }
+    }
+}
 
+@Composable
+private fun SearchResultList(
+    lazyListState: LazyListState,
+    state: BooksSearchUiState.Stable,
+    onClick: (Book) -> Unit
+) {
+    LazyColumn(
+        state = lazyListState,
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp)
+    ) {
+        itemsIndexed(
+            items = state.books,
+            key = { _, book -> book.toString() }
+        ) { index, book ->
+            BookListItem(
+                book = book,
+                onClick = onClick,
+                drawDivider = index != state.books.lastIndex
+            )
+        }
     }
 }
 
@@ -40,7 +77,8 @@ private fun SearchInput(
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 0.dp)
+            .clipToBounds(),
         value = state.searchRequest,
         onValueChange = onValueChanged,
         placeholder = { Text(text = "Enter request") },

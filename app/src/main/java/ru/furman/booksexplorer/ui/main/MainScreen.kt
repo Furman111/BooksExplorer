@@ -188,7 +188,7 @@ private fun BooksCarousel(
 }
 
 @Composable
-private fun BookListItem(book: Book, onClick: (book: Book) -> Unit, drawDivider: Boolean) {
+fun BookListItem(book: Book, onClick: (book: Book) -> Unit, drawDivider: Boolean) {
     BookVerticalItem(
         modifier = Modifier.padding(
             horizontal = 16.dp,
