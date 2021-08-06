@@ -25,6 +25,7 @@ import ru.furman.booksexplorer.ui.main.BookListItem
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.search.SearchBooksViewModel
 
+@ExperimentalMaterialApi
 @Composable
 fun SearchScreen(viewModel: SearchBooksViewModel) {
     StatesOf(viewModel = viewModel) { state, _ ->
@@ -42,6 +43,7 @@ fun SearchScreen(viewModel: SearchBooksViewModel) {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun SearchResultList(
     lazyListState: LazyListState,
