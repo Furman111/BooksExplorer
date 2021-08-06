@@ -38,17 +38,15 @@ fun DetailsScreen(navController: NavController, viewModel: BookDetailsViewModel)
             }
         }
 
-        BooksExplorerTheme {
-            Content(
-                state = state,
-                onPageSelected = { page ->
-                    viewModel.handleEvent(BookDetailsUiEvent.PageSelected(page))
-                },
-                onBackButtonClick = {
-                    viewModel.handleEvent(BookDetailsUiEvent.OnBackPressed)
-                }
-            )
-        }
+        Content(
+            state = state,
+            onPageSelected = { page ->
+                viewModel.handleEvent(BookDetailsUiEvent.PageSelected(page))
+            },
+            onBackButtonClick = {
+                viewModel.handleEvent(BookDetailsUiEvent.OnBackPressed)
+            }
+        )
     }
 }
 

@@ -24,6 +24,7 @@ import ru.furman.booksexplorer.ui.BottomNavigationScreen
 import ru.furman.booksexplorer.ui.Screens
 import ru.furman.booksexplorer.ui.details.DetailsScreen
 import ru.furman.booksexplorer.ui.main.MainScreen
+import ru.furman.booksexplorer.ui.search.SearchScreen
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
@@ -101,7 +102,7 @@ class MainActivity : ComponentActivity() {
                     MainScreen(navController, hiltViewModel())
                 }
                 composable(Screens.SEARCH.name) {
-
+                    SearchScreen(hiltViewModel())
                 }
                 composable(
                     Screens.DETAILS.name,

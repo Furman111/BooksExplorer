@@ -54,47 +54,45 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
             }
         }
 
-        BooksExplorerTheme {
-            Surface {
-                Column(Modifier.fillMaxSize()) {
-                    Toolbar(title = stringResource(id = R.string.main_toolbar_title))
-                    SwipeRefresh(
-                        modifier = Modifier.fillMaxSize(),
-                        state = rememberSwipeRefreshState(
-                            (state as? BooksUiState.Stable)?.isUpdating ?: false
-                        ),
-                        onRefresh = {
-                            viewModel.handleEvent(BooksUiEvent.SwipeToRefresh)
-                        }
-                    ) {
-                        val onBookClick = { book: Book ->
-                            viewModel.handleEvent(
-                                BooksUiEvent.BookClick(book)
+        Surface {
+            Column(Modifier.fillMaxSize()) {
+                Toolbar(title = stringResource(id = R.string.main_toolbar_title))
+                SwipeRefresh(
+                    modifier = Modifier.fillMaxSize(),
+                    state = rememberSwipeRefreshState(
+                        (state as? BooksUiState.Stable)?.isUpdating ?: false
+                    ),
+                    onRefresh = {
+                        viewModel.handleEvent(BooksUiEvent.SwipeToRefresh)
+                    }
+                ) {
+                    val onBookClick = { book: Book ->
+                        viewModel.handleEvent(
+                            BooksUiEvent.BookClick(book)
+                        )
+                    }
+
+                    when (state) {
+                        BooksUiState.Error -> {
+                            CommonError(
+                                Modifier
+                                    .verticalScroll(rememberScrollState())
+                                    .fillMaxSize()
                             )
                         }
-
-                        when (state) {
-                            BooksUiState.Error -> {
-                                CommonError(
-                                    Modifier
-                                        .verticalScroll(rememberScrollState())
-                                        .fillMaxSize()
+                        is BooksUiState.Stable -> {
+                            val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
+                            LazyColumn(
+                                state = lazyListState,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                lazyListContent(
+                                    carouselBooks = state.carouselBooks,
+                                    booksPagingItems = booksPagingItems,
+                                    carouselScrollState = carouselScrollState,
+                                    onClick = onBookClick
                                 )
-                            }
-                            is BooksUiState.Stable -> {
-                                val booksPagingItems = state.booksFlow.collectAsLazyPagingItems()
-                                LazyColumn(
-                                    state = lazyListState,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                ) {
-                                    lazyListContent(
-                                        carouselBooks = state.carouselBooks,
-                                        booksPagingItems = booksPagingItems,
-                                        carouselScrollState = carouselScrollState,
-                                        onClick = onBookClick
-                                    )
-                                }
                             }
                         }
                     }

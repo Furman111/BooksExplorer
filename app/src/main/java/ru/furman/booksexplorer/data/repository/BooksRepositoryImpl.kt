@@ -20,7 +20,7 @@ class BooksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchBooks(request: String): List<Book> {
-        return booksApi.getBooks(page = request.toInt(), pageSize = SEARCH_BOOKS_COUNT).data
+        return booksApi.getBooks(page = request.hashCode(), pageSize = SEARCH_BOOKS_COUNT).data
             .map(::processImage)
     }
 
