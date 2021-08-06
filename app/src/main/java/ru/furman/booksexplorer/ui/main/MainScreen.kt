@@ -38,6 +38,8 @@ import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @Composable
 fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     StatesOf(viewModel) { state, effects ->
@@ -102,7 +104,8 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 private fun LazyListScope.lazyListContent(
     carouselBooks: List<Book>,
     booksPagingItems: LazyPagingItems<Book>,
@@ -163,6 +166,7 @@ private fun Header(@StringRes textRes: Int) {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun BooksCarousel(
     books: List<Book>,
@@ -187,6 +191,7 @@ private fun BooksCarousel(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun BookListItem(book: Book, onClick: (book: Book) -> Unit, drawDivider: Boolean) {
     BookVerticalItem(
@@ -202,6 +207,7 @@ fun BookListItem(book: Book, onClick: (book: Book) -> Unit, drawDivider: Boolean
     }
 }
 
+@ExperimentalMaterialApi
 @Preview
 @Composable
 private fun BooksCarouselPreview() {
@@ -225,6 +231,7 @@ private fun BooksCarouselPreview() {
     }
 }
 
+@ExperimentalMaterialApi
 @Preview
 @Composable
 private fun BooksListItemPreview() {

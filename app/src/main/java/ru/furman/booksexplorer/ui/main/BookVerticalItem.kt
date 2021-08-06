@@ -2,10 +2,10 @@ package ru.furman.booksexplorer.ui.main
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +21,7 @@ import coil.compose.rememberImagePainter
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 
+@ExperimentalMaterialApi
 @Composable
 fun BookVerticalItem(
     book: Book,
@@ -28,8 +29,10 @@ fun BookVerticalItem(
     onClick: (Book) -> Unit
 ) {
     Card(
-        modifier = modifier
-            .clickable { onClick(book) }
+        modifier = modifier,
+        onClick = {
+            onClick(book)
+        }
     ) {
         Row(
             Modifier.padding(16.dp),
@@ -73,6 +76,7 @@ fun BookVerticalItem(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 @Preview
 fun BookVerticalItemPreview() {

@@ -3,6 +3,7 @@ package ru.furman.booksexplorer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -29,14 +30,16 @@ import ru.furman.booksexplorer.ui.search.SearchScreen
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
+@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val bottomNavigationScreens: List<BottomNavigationScreen> =
         listOf(BottomNavigationScreen.Main, BottomNavigationScreen.Search)
 
-    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,7 +47,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @ExperimentalPagerApi
     @Composable
     fun BooksExplorerApp() {
         BooksExplorerTheme {
@@ -53,7 +55,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @ExperimentalPagerApi
     @Composable
     fun BooksExplorerNavHost(
         navController: NavHostController,
