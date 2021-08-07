@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,11 +29,11 @@ import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @Composable
 @ExperimentalPagerApi
-fun DetailsScreen(navController: NavController, viewModel: BookDetailsViewModel) {
+fun DetailsScreen(viewModel: BookDetailsViewModel, navigateBack: () -> Unit) {
     StatesOf(viewModel = viewModel) { state, effects ->
         CollectEffects(effects) { effect ->
             if (effect == BookDetailsUiEffect.NavigateBack) {
-                navController.popBackStack()
+                navigateBack()
             }
         }
 

@@ -16,8 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -29,19 +27,20 @@ import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.model.ui.books.BooksUiEffect
 import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
-import ru.furman.booksexplorer.ui.Screens
 import ru.furman.booksexplorer.ui.component.CommonError
 import ru.furman.booksexplorer.ui.component.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
-import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
+fun MainScreen(
+    viewModel: BooksViewModel,
+    navigateToDetails: (Book) -> Unit
+) {
     StatesOf(viewModel) { state, effects ->
         val carouselScrollState = rememberLazyListState()
         val lazyListState = rememberLazyListState()
@@ -49,9 +48,7 @@ fun MainScreen(navController: NavController, viewModel: BooksViewModel) {
         CollectEffects(effects) { effect ->
             when (effect) {
                 is BooksUiEffect.NavigateToDetails -> {
-                    navController.navigate(Screens.DETAILS.name)
-                    navController.currentBackStackEntry?.arguments =
-                        bundleOf(BookDetailsViewModel.ARG_BOOK to effect.book)
+                    navigateToDetails(effect.book)
                 }
             }
         }
