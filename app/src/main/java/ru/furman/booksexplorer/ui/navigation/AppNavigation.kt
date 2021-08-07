@@ -1,8 +1,9 @@
-package ru.furman.booksexplorer.ui
+package ru.furman.booksexplorer.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -77,29 +78,7 @@ internal fun AppNavigation(
                 )?.showBottomNavigation != false
             ) {
                 BottomNavigation {
-                    bottomNavigationScreens.forEach { screen ->
-                        BottomNavigationItem(
-                            modifier = Modifier.background(MaterialTheme.colors.surface),
-                            icon = { Icon(screen.icon, contentDescription = null) },
-                            label = {
-                                Text(
-                                    text = stringResource(screen.labelRes),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            },
-                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            selectedContentColor = MaterialTheme.colors.onSurface
-                        )
-                    }
+                    BottomNavigationItems(currentDestination, navController)
                 }
             }
         }
@@ -112,6 +91,36 @@ internal fun AppNavigation(
             addMainTopLevel(navController)
             addSearchTopLevel(navController)
         }
+    }
+}
+
+@Composable
+private fun RowScope.BottomNavigationItems(
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
+    bottomNavigationScreens.forEach { screen ->
+        BottomNavigationItem(
+            modifier = Modifier.background(MaterialTheme.colors.surface),
+            icon = { Icon(screen.icon, contentDescription = null) },
+            label = {
+                Text(
+                    text = stringResource(screen.labelRes),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+            onClick = {
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
+            selectedContentColor = MaterialTheme.colors.onSurface
+        )
     }
 }
 
