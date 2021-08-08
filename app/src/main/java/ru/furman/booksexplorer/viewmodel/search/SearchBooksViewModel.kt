@@ -14,16 +14,14 @@ import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.model.ui.common.EmptyUiEffect
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiEvent
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiState
-import ru.furman.booksexplorer.utils.subscribe.LaunchUtils
-import ru.furman.booksexplorer.utils.subscribe.LaunchUtilsImpl
+import ru.furman.booksexplorer.utils.coroutine.launchSingle
 import ru.furman.booksexplorer.viewmodel.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchBooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository
-) : BaseViewModel<BooksSearchUiState, BooksSearchUiEvent, EmptyUiEffect>(),
-    LaunchUtils by LaunchUtilsImpl() {
+) : BaseViewModel<BooksSearchUiState, BooksSearchUiEvent, EmptyUiEffect>() {
 
     private var loadJob: Job? = null
 
