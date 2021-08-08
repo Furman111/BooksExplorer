@@ -2,27 +2,18 @@ package ru.furman.booksexplorer.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.furman.booksexplorer.R
@@ -32,7 +23,7 @@ import ru.furman.booksexplorer.ui.main.MainScreen
 import ru.furman.booksexplorer.ui.search.SearchScreen
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
-internal sealed class Screen(
+sealed class Screen(
     val route: String,
     val icon: ImageVector,
     @StringRes val labelRes: Int
@@ -41,86 +32,32 @@ internal sealed class Screen(
     object Search : Screen("searchroot", Icons.Filled.Search, R.string.search_label)
 }
 
-private val bottomNavigationScreens: List<Screen> =
+val bottomNavigationScreens: List<Screen> =
     listOf(Screen.Main, Screen.Search)
 
-private sealed class LeafScreen(val route: String, val showBottomNavigation: Boolean = true) {
+sealed class LeafScreen(val route: String) {
     object Main : LeafScreen("main")
     object Search : LeafScreen("search")
-    object Details : LeafScreen("details", false)
-
-    companion object {
-
-        private val allLeafScreens = listOf(Main, Search, Details)
-
-        fun screenByRoute(route: String): LeafScreen? {
-            return allLeafScreens.find { screen -> screen.route == route }
-        }
-
-    }
-
+    object Details : LeafScreen("details")
 }
+
+val noBottomBarLeafScreens = listOf(LeafScreen.Details)
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @Composable
 internal fun AppNavigation(
+    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    Scaffold(
-        bottomBar = {
-            if (LeafScreen.screenByRoute(
-                    currentDestination?.route ?: ""
-                )?.showBottomNavigation != false
-            ) {
-                BottomNavigation {
-                    BottomNavigationItems(currentDestination, navController)
-                }
-            }
-        }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Screen.Main.route,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            addMainTopLevel(navController)
-            addSearchTopLevel(navController)
-        }
-    }
-}
-
-@Composable
-private fun RowScope.BottomNavigationItems(
-    currentDestination: NavDestination?,
-    navController: NavHostController
-) {
-    bottomNavigationScreens.forEach { screen ->
-        BottomNavigationItem(
-            modifier = Modifier.background(MaterialTheme.colors.surface),
-            icon = { Icon(screen.icon, contentDescription = null) },
-            label = {
-                Text(
-                    text = stringResource(screen.labelRes),
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-            onClick = {
-                navController.navigate(screen.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
-            selectedContentColor = MaterialTheme.colors.onSurface
-        )
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Main.route,
+        modifier = modifier
+    ) {
+        addMainTopLevel(navController)
+        addSearchTopLevel(navController)
     }
 }
 
