@@ -27,7 +27,10 @@ import ru.furman.booksexplorer.viewmodel.search.SearchBooksViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun SearchScreen(viewModel: SearchBooksViewModel) {
+fun SearchScreen(
+    viewModel: SearchBooksViewModel,
+    navigateToDetails: (Book) -> Unit
+) {
     StatesOf(viewModel = viewModel) { state, _ ->
         val lazyListState = rememberLazyListState()
 
@@ -35,7 +38,7 @@ fun SearchScreen(viewModel: SearchBooksViewModel) {
             Column(Modifier.fillMaxSize()) {
                 SearchInput(state) { viewModel.handleEvent(BooksSearchUiEvent.NewSearchRequest(it)) }
                 when (state) {
-                    is BooksSearchUiState.Stable -> SearchResultList(lazyListState, state, {})
+                    is BooksSearchUiState.Stable -> SearchResultList(lazyListState, state, navigateToDetails)
                     is BooksSearchUiState.Error -> CommonError(modifier = Modifier.fillMaxSize())
                 }
             }

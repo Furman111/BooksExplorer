@@ -58,6 +58,7 @@ internal fun AppNavigation(
     ) {
         addMainTopLevel(navController)
         addSearchTopLevel(navController)
+        addDetails(navController)
     }
 }
 
@@ -70,7 +71,6 @@ private fun NavGraphBuilder.addMainTopLevel(navController: NavController) {
         startDestination = LeafScreen.Main.route
     ) {
         addMain(navController)
-        addDetails(navController)
     }
 }
 
@@ -82,7 +82,6 @@ private fun NavGraphBuilder.addSearchTopLevel(navController: NavController) {
         startDestination = LeafScreen.Search.route
     ) {
         addSearch(navController)
-        addDetails(navController)
     }
 }
 
@@ -91,9 +90,7 @@ private fun NavGraphBuilder.addSearchTopLevel(navController: NavController) {
 private fun NavGraphBuilder.addMain(navController: NavController) {
     composable(LeafScreen.Main.route) {
         MainScreen(hiltViewModel()) { book ->
-            navController.navigate(LeafScreen.Details.route)
-            navController.currentBackStackEntry?.arguments =
-                bundleOf(BookDetailsViewModel.ARG_BOOK to book)
+            navController.navigateToDetails(book)
         }
     }
 }
@@ -101,8 +98,16 @@ private fun NavGraphBuilder.addMain(navController: NavController) {
 @ExperimentalMaterialApi
 private fun NavGraphBuilder.addSearch(navController: NavController) {
     composable(LeafScreen.Search.route) {
-        SearchScreen(hiltViewModel())
+        SearchScreen(hiltViewModel()) { book ->
+            navController.navigateToDetails(book)
+        }
     }
+}
+
+private fun NavController.navigateToDetails(book: Book) {
+    navigate(LeafScreen.Details.route)
+    currentBackStackEntry?.arguments =
+        bundleOf(BookDetailsViewModel.ARG_BOOK to book)
 }
 
 @ExperimentalPagerApi

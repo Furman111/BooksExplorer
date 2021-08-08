@@ -24,13 +24,11 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.domain.Book
-import ru.furman.booksexplorer.model.ui.books.BooksUiEffect
 import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
 import ru.furman.booksexplorer.ui.component.CommonError
 import ru.furman.booksexplorer.ui.component.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
-import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
 
@@ -41,17 +39,9 @@ fun MainScreen(
     viewModel: BooksViewModel,
     navigateToDetails: (Book) -> Unit
 ) {
-    StatesOf(viewModel) { state, effects ->
+    StatesOf(viewModel) { state, _ ->
         val carouselScrollState = rememberLazyListState()
         val lazyListState = rememberLazyListState()
-
-        CollectEffects(effects) { effect ->
-            when (effect) {
-                is BooksUiEffect.NavigateToDetails -> {
-                    navigateToDetails(effect.book)
-                }
-            }
-        }
 
         Surface {
             Column(Modifier.fillMaxSize()) {
@@ -66,9 +56,7 @@ fun MainScreen(
                     }
                 ) {
                     val onBookClick = { book: Book ->
-                        viewModel.handleEvent(
-                            BooksUiEvent.BookClick(book)
-                        )
+                        navigateToDetails(book)
                     }
 
                     when (state) {

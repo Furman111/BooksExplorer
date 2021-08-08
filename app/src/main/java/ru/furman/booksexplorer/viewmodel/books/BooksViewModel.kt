@@ -12,9 +12,9 @@ import kotlinx.coroutines.withContext
 import ru.furman.booksexplorer.data.paging.BooksPagingSource
 import ru.furman.booksexplorer.data.repository.BooksRepository
 import ru.furman.booksexplorer.mapper.BooksMapper
-import ru.furman.booksexplorer.model.ui.books.BooksUiEffect
 import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
+import ru.furman.booksexplorer.model.ui.common.EmptyUiEffect
 import ru.furman.booksexplorer.viewmodel.BaseViewModel
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val booksMapper: BooksMapper
-) : BaseViewModel<BooksUiState, BooksUiEvent, BooksUiEffect>() {
+) : BaseViewModel<BooksUiState, BooksUiEvent, EmptyUiEffect>() {
 
     private val booksFlow = Pager(
         PagingConfig(
@@ -43,9 +43,6 @@ class BooksViewModel @Inject constructor(
 
     override fun handleEvent(event: BooksUiEvent) {
         when (event) {
-            is BooksUiEvent.BookClick -> {
-                setEffect(BooksUiEffect.NavigateToDetails(event.book))
-            }
             BooksUiEvent.SwipeToRefresh -> {
                 booksPagingSource.invalidate()
                 loadBooks()
