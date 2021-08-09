@@ -1,9 +1,6 @@
 package ru.furman.booksexplorer.ui.details
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +18,7 @@ import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEffect
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEvent
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
+import ru.furman.booksexplorer.ui.component.BuyButton
 import ru.furman.booksexplorer.ui.component.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.CollectEffects
@@ -29,7 +27,11 @@ import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @Composable
 @ExperimentalPagerApi
-fun DetailsScreen(viewModel: BookDetailsViewModel, navigateBack: () -> Unit) {
+fun DetailsScreen(
+    viewModel: BookDetailsViewModel,
+    navigateBack: () -> Unit,
+    onBuyClick: () -> Unit
+) {
     StatesOf(viewModel = viewModel) { state, effects ->
         CollectEffects(effects) { effect ->
             if (effect == BookDetailsUiEffect.NavigateBack) {
@@ -44,7 +46,8 @@ fun DetailsScreen(viewModel: BookDetailsViewModel, navigateBack: () -> Unit) {
             },
             onBackButtonClick = {
                 viewModel.handleEvent(BookDetailsUiEvent.OnBackPressed)
-            }
+            },
+            onBuyClick = onBuyClick
         )
     }
 }
@@ -54,7 +57,8 @@ fun DetailsScreen(viewModel: BookDetailsViewModel, navigateBack: () -> Unit) {
 private fun Content(
     state: BookDetailsUiState,
     onPageSelected: (Int) -> Unit,
-    onBackButtonClick: () -> Unit
+    onBackButtonClick: () -> Unit,
+    onBuyClick: () -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
         Toolbar(
@@ -72,20 +76,30 @@ private fun Content(
             snapshotFlow { pagerState.currentPage }.collect { onPageSelected(it) }
         }
         Tabs(state = state, pagerState = pagerState, onPageSelected = onPageSelected)
-        HorizontalPager(
-            modifier = Modifier.fillMaxSize(),
-            state = pagerState,
-            verticalAlignment = Alignment.Top
-        ) { page ->
-            if (page == 0) {
-                DetailsFirstPageScreen(Modifier.padding(16.dp), state.firstPage)
-            } else {
-                DetailsSecondPageScreen(
-                    Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    state.secondPage
-                )
+
+
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            HorizontalPager(
+                modifier = Modifier.fillMaxSize(),
+                state = pagerState,
+                verticalAlignment = Alignment.Top
+            ) { page ->
+                if (page == 0) {
+                    DetailsFirstPageScreen(Modifier.padding(16.dp), state.firstPage)
+                } else {
+                    DetailsSecondPageScreen(
+                        Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        state.secondPage
+                    )
+                }
+            }
+
+            Box(modifier = Modifier.padding(16.dp)) {
+                BuyButton(Modifier.fillMaxWidth()) {
+                    onBuyClick()
+                }
             }
         }
     }
@@ -141,7 +155,8 @@ private fun DetailsScreenPreview() {
                     isFirstPageSelected = true
                 ),
                 onPageSelected = {},
-                onBackButtonClick = {}
+                onBackButtonClick = {},
+                onBuyClick = {}
             )
         }
     }

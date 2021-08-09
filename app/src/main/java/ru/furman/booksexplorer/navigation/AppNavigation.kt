@@ -119,8 +119,13 @@ private fun NavGraphBuilder.addDetails(navController: NavController) {
             type = NavType.ParcelableType(Book::class.java)
         })
     ) {
-        DetailsScreen(viewModel = hiltViewModel()) {
-            navController.popBackStack()
-        }
+        DetailsScreen(viewModel = hiltViewModel(),
+            navigateBack = {
+                navController.popBackStack()
+            },
+            onBuyClick = {
+                //todo
+            }
+        )
     }
 }
