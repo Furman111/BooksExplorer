@@ -6,12 +6,9 @@ import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import ru.furman.booksexplorer.R
 
 private val DarkColorPalette = darkColors(
@@ -46,19 +43,6 @@ fun BooksExplorerTheme(
         DarkColorPalette
     } else {
         LightColorPalette
-    }
-
-    val systemUiController = rememberSystemUiController()
-
-    key(darkTheme) {
-        systemUiController.setStatusBarColor(
-            color = if (darkTheme) {
-                Color.Black
-            } else {
-                colors.primaryVariant
-            },
-            darkIcons = false
-        )
     }
 
     MaterialTheme(
