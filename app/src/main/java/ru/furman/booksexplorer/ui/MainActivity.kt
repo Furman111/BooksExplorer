@@ -3,6 +3,7 @@ package ru.furman.booksexplorer.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -15,6 +16,7 @@ import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
+@ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
