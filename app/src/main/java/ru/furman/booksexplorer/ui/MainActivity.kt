@@ -9,7 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
-import ru.furman.booksexplorer.ui.navigation.AppContent
+import ru.furman.booksexplorer.navigation.AppContent
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 
 @ExperimentalMaterialApi

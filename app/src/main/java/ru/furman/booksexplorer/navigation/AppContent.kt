@@ -1,4 +1,4 @@
-package ru.furman.booksexplorer.ui.navigation
+package ru.furman.booksexplorer.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
