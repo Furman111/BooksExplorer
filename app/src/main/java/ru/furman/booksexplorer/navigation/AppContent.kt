@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -26,14 +28,13 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 fun AppContent() {
     val navController = rememberNavController()
+    val currentSelectedItem by navController.currentScreenAsState()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val hideBottomBar =
+        noBottomBarLeafScreens.any { it.route == currentBackStackEntry?.destination?.route }
 
     Scaffold(
         bottomBar = {
-            val currentSelectedItem by navController.currentScreenAsState()
-            val currentBackStackEntry by navController.currentBackStackEntryAsState()
-            val hideBottomBar =
-                noBottomBarLeafScreens.any { it.route == currentBackStackEntry?.destination?.route }
-
             AnimatedVisibility(
                 visible = !hideBottomBar,
                 enter = slideInVertically(initialOffsetY = { it * 2 }),
@@ -58,7 +59,12 @@ fun AppContent() {
     ) { innerPadding ->
         Box(
             Modifier
-                .padding(innerPadding)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                    bottom = if (hideBottomBar) 0.dp else innerPadding.calculateBottomPadding()
+                )
                 .fillMaxSize()
         ) {
             AppNavigation(navController = navController)
