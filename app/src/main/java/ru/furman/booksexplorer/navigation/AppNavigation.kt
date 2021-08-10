@@ -23,25 +23,52 @@ import ru.furman.booksexplorer.ui.main.MainScreen
 import ru.furman.booksexplorer.ui.search.SearchScreen
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
-sealed class Screen(
-    val route: String,
-    val icon: ImageVector,
-    @StringRes val labelRes: Int
-) {
-    object Main : Screen("mainroot", Icons.Filled.Home, R.string.main_label)
-    object Search : Screen("searchroot", Icons.Filled.Search, R.string.search_label)
+interface Navigable {
+
+    val route: String
+
 }
 
-val bottomNavigationScreens: List<Screen> =
-    listOf(Screen.Main, Screen.Search)
+sealed class Graph : Navigable {
 
-sealed class LeafScreen(val route: String) {
-    object Main : LeafScreen("main")
-    object Search : LeafScreen("search")
-    object Details : LeafScreen("details")
+    sealed class BottomNavigation(
+        override val route: String,
+        val icon: ImageVector,
+        @StringRes val labelRes: Int
+    ) : Graph() {
+        object Main : BottomNavigation("mainroot", Icons.Filled.Home, R.string.main_label)
+        object Search : BottomNavigation("searchroot", Icons.Filled.Search, R.string.search_label)
+    }
+
+    object Details : Graph() {
+
+        override val route = "detailsgraph"
+
+    }
+
 }
 
-val noBottomBarLeafScreens = listOf(LeafScreen.Details)
+sealed class Screen(override val route: String) : Navigable {
+
+    object Main : Screen("main")
+
+    object Search : Screen("search")
+
+    object Details : Screen("details")
+
+}
+
+sealed class BottomSheet(override val route: String) : Navigable {
+
+    object Buy : Screen("buy")
+
+}
+
+val bottomNavigationGraphs: List<Graph.BottomNavigation> =
+    listOf(Graph.BottomNavigation.Main, Graph.BottomNavigation.Search)
+
+
+val noBottomBarNavigableList = listOf(Screen.Details, BottomSheet.Buy)
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -53,7 +80,7 @@ internal fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Main.route,
+        startDestination = Graph.BottomNavigation.Main.route,
         modifier = modifier
     ) {
         addMainTopLevel(navController)
@@ -67,8 +94,8 @@ internal fun AppNavigation(
 @ExperimentalPagerApi
 private fun NavGraphBuilder.addMainTopLevel(navController: NavController) {
     navigation(
-        route = Screen.Main.route,
-        startDestination = LeafScreen.Main.route
+        route = Graph.BottomNavigation.Main.route,
+        startDestination = Screen.Main.route
     ) {
         addMain(navController)
     }
@@ -78,8 +105,8 @@ private fun NavGraphBuilder.addMainTopLevel(navController: NavController) {
 @ExperimentalPagerApi
 private fun NavGraphBuilder.addSearchTopLevel(navController: NavController) {
     navigation(
-        route = Screen.Search.route,
-        startDestination = LeafScreen.Search.route
+        route = Graph.BottomNavigation.Search.route,
+        startDestination = Screen.Search.route
     ) {
         addSearch(navController)
     }
@@ -88,7 +115,7 @@ private fun NavGraphBuilder.addSearchTopLevel(navController: NavController) {
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 private fun NavGraphBuilder.addMain(navController: NavController) {
-    composable(LeafScreen.Main.route) {
+    composable(Screen.Main.route) {
         MainScreen(hiltViewModel()) { book ->
             navController.navigateToDetails(book)
         }
@@ -97,7 +124,7 @@ private fun NavGraphBuilder.addMain(navController: NavController) {
 
 @ExperimentalMaterialApi
 private fun NavGraphBuilder.addSearch(navController: NavController) {
-    composable(LeafScreen.Search.route) {
+    composable(Screen.Search.route) {
         SearchScreen(hiltViewModel()) { book ->
             navController.navigateToDetails(book)
         }
@@ -105,7 +132,7 @@ private fun NavGraphBuilder.addSearch(navController: NavController) {
 }
 
 private fun NavController.navigateToDetails(book: Book) {
-    navigate(LeafScreen.Details.route)
+    navigate(Graph.Details.route)
     currentBackStackEntry?.arguments =
         bundleOf(BookDetailsViewModel.ARG_BOOK to book)
 }
@@ -113,19 +140,22 @@ private fun NavController.navigateToDetails(book: Book) {
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 private fun NavGraphBuilder.addDetails(navController: NavController) {
-    composable(
-        LeafScreen.Details.route,
-        arguments = listOf(navArgument(BookDetailsViewModel.ARG_BOOK) {
-            type = NavType.ParcelableType(Book::class.java)
-        })
-    ) {
-        DetailsScreen(viewModel = hiltViewModel(),
-            navigateBack = {
-                navController.popBackStack()
-            },
-            onBuyClick = {
-                //todo
-            }
-        )
+    navigation(route = Graph.Details.route, startDestination = Screen.Details.route) {
+        composable(
+            Screen.Details.route,
+            arguments = listOf(navArgument(BookDetailsViewModel.ARG_BOOK) {
+                type = NavType.ParcelableType(Book::class.java)
+            })
+        ) {
+            DetailsScreen(viewModel = hiltViewModel(),
+                navigateBack = {
+                    navController.popBackStack()
+                },
+                onBuyClick = {
+                    //todo
+                }
+            )
+        }
+        //todo add bottom sheet
     }
 }

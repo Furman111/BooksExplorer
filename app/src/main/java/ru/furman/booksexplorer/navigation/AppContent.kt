@@ -31,14 +31,14 @@ fun AppContent() {
     val currentSelectedItem by navController.currentScreenAsState()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val hideBottomBar =
-        noBottomBarLeafScreens.any { it.route == currentBackStackEntry?.destination?.route }
+        noBottomBarNavigableList.any { it.route == currentBackStackEntry?.destination?.route }
 
     Scaffold(
         bottomBar = {
             AnimatedVisibility(
                 visible = !hideBottomBar,
-                enter = slideInVertically(initialOffsetY = { it * 2 }),
-                exit = slideOutVertically(targetOffsetY = { it * 2 })
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it })
             ) {
                 AppBottomNavigation(
                     selectedNavigation = currentSelectedItem,
@@ -78,17 +78,18 @@ fun AppContent() {
  */
 @Stable
 @Composable
-private fun NavController.currentScreenAsState(): State<Screen> {
-    val selectedItem = remember { mutableStateOf<Screen>(Screen.Main) }
+private fun NavController.currentScreenAsState(): State<Graph.BottomNavigation> {
+    val selectedItem =
+        remember { mutableStateOf<Graph.BottomNavigation>(Graph.BottomNavigation.Main) }
 
     DisposableEffect(this) {
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
             when {
-                destination.hierarchy.any { it.route == Screen.Main.route } -> {
-                    selectedItem.value = Screen.Main
+                destination.hierarchy.any { it.route == Graph.BottomNavigation.Main.route } -> {
+                    selectedItem.value = Graph.BottomNavigation.Main
                 }
-                destination.hierarchy.any { it.route == Screen.Search.route } -> {
-                    selectedItem.value = Screen.Search
+                destination.hierarchy.any { it.route == Graph.BottomNavigation.Search.route } -> {
+                    selectedItem.value = Graph.BottomNavigation.Search
                 }
             }
         }
@@ -104,8 +105,8 @@ private fun NavController.currentScreenAsState(): State<Screen> {
 
 @Composable
 internal fun AppBottomNavigation(
-    selectedNavigation: Screen,
-    onNavigationSelected: (Screen) -> Unit,
+    selectedNavigation: Graph.BottomNavigation,
+    onNavigationSelected: (Graph.BottomNavigation) -> Unit,
     modifier: Modifier = Modifier
 ) {
     BottomNavigation(modifier = modifier) {
@@ -118,10 +119,10 @@ internal fun AppBottomNavigation(
 
 @Composable
 private fun RowScope.BottomNavigationItems(
-    currentScreen: Screen,
-    onClick: (Screen) -> Unit
+    currentScreen: Graph.BottomNavigation,
+    onClick: (Graph.BottomNavigation) -> Unit
 ) {
-    bottomNavigationScreens.forEach { screen ->
+    bottomNavigationGraphs.forEach { screen ->
         BottomNavigationItem(
             modifier = Modifier.background(MaterialTheme.colors.surface),
             icon = { Icon(screen.icon, contentDescription = null) },
