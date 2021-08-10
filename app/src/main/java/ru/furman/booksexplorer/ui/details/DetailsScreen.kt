@@ -25,12 +25,12 @@ import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
+@ExperimentalMaterialApi
 @Composable
 @ExperimentalPagerApi
 fun DetailsScreen(
     viewModel: BookDetailsViewModel,
-    navigateBack: () -> Unit,
-    onBuyClick: () -> Unit
+    navigateBack: () -> Unit
 ) {
     StatesOf(viewModel = viewModel) { state, effects ->
         CollectEffects(effects) { effect ->
@@ -39,16 +39,22 @@ fun DetailsScreen(
             }
         }
 
-        Content(
-            state = state,
-            onPageSelected = { page ->
-                viewModel.handleEvent(BookDetailsUiEvent.PageSelected(page))
-            },
-            onBackButtonClick = {
-                viewModel.handleEvent(BookDetailsUiEvent.OnBackPressed)
-            },
-            onBuyClick = onBuyClick
-        )
+        val buyBottomSheetState =
+            rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        val bottomSheetScope = rememberCoroutineScope()
+
+        BuyBottomSheet(buyBottomSheetState) {
+            Content(
+                state = state,
+                onPageSelected = { page ->
+                    viewModel.handleEvent(BookDetailsUiEvent.PageSelected(page))
+                },
+                onBackButtonClick = {
+                    viewModel.handleEvent(BookDetailsUiEvent.OnBackPressed)
+                },
+                onBuyClick = { bottomSheetScope.launch { buyBottomSheetState.show() } }
+            )
+        }
     }
 }
 

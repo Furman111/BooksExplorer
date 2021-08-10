@@ -150,12 +150,8 @@ private fun NavGraphBuilder.addDetails(navController: NavController) {
             DetailsScreen(viewModel = hiltViewModel(),
                 navigateBack = {
                     navController.popBackStack()
-                },
-                onBuyClick = {
-                    //todo
                 }
             )
         }
-        //todo add bottom sheet
     }
 }
