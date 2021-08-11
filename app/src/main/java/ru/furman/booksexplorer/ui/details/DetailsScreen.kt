@@ -79,13 +79,16 @@ private fun Content(
         )
         val pagerState = rememberPagerState(pageCount = 2)
 
-        rememberCoroutineScope().launch {
-            pagerState.animateScrollToPage(if (state.isFirstPageSelected) 0 else 1)
+        LaunchedEffect(key1 = state.isFirstPageSelected) {
+            launch {
+                pagerState.animateScrollToPage(if (state.isFirstPageSelected) 0 else 1)
+            }
         }
 
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { onPageSelected(it) }
         }
+
         Tabs(state = state, pagerState = pagerState, onPageSelected = onPageSelected)
 
 
