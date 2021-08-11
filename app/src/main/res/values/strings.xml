@@ -15,5 +15,5 @@
     <string name="book_details_overview_tab">Overview</string>
     <string name="book_details_details_tab">Details</string>
     <string name="book_details_buy_button">Buy</string>
-    <string name="book_details_buy_error">Unfortunately, shop is not available</string>
+    <string name="book_details_buy_error">Unfortunately, shop is unavailable now</string>
 </resources>

@@ -1,5 +1,6 @@
 package ru.furman.booksexplorer.ui.details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -42,6 +43,10 @@ fun DetailsScreen(
         val buyBottomSheetState =
             rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         val bottomSheetScope = rememberCoroutineScope()
+
+        BackHandler(enabled = buyBottomSheetState.isVisible) {
+            bottomSheetScope.launch { buyBottomSheetState.hide() }
+        }
 
         BuyBottomSheet(buyBottomSheetState) {
             Content(
