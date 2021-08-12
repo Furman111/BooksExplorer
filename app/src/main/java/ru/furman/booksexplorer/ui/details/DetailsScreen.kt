@@ -2,6 +2,8 @@ package ru.furman.booksexplorer.ui.details
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +27,7 @@ import ru.furman.booksexplorer.ui.component.CollapsingSubtitleToolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
+import ru.furman.booksexplorer.utils.toolbarOffsetBy
 import ru.furman.booksexplorer.viewmodel.details.BookDetailsViewModel
 
 @ExperimentalMaterialApi
@@ -71,11 +75,14 @@ private fun Content(
     onBackButtonClick: () -> Unit,
     onBuyClick: () -> Unit
 ) {
+    val pageScrollState = rememberScrollState()
+
     Column(Modifier.fillMaxSize()) {
         CollapsingSubtitleToolbar(
             title = state.toolbarTitle,
             subtitle = state.toolbarSubtitle,
             showBackIcon = true,
+            scrollOffset = pageScrollState.toolbarOffsetBy(16.dp, LocalDensity.current),
             onBackIconClicked = onBackButtonClick
         )
         val pagerState = rememberPagerState(pageCount = 2)
@@ -92,15 +99,20 @@ private fun Content(
 
         Tabs(state = state, pagerState = pagerState, onPageSelected = onPageSelected)
 
-
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
             HorizontalPager(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(pageScrollState),
                 state = pagerState,
                 verticalAlignment = Alignment.Top
             ) { page ->
                 if (page == 0) {
-                    DetailsFirstPageScreen(Modifier.padding(16.dp), state.firstPage)
+                    DetailsFirstPageScreen(
+                        Modifier
+                            .padding(16.dp),
+                        state.firstPage
+                    )
                 } else {
                     DetailsSecondPageScreen(
                         Modifier
