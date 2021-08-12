@@ -31,6 +31,7 @@ class BookDetailsViewModel @Inject constructor(
     override fun createInitialState(): BookDetailsUiState {
         return BookDetailsUiState(
             toolbarTitle = book.title,
+            toolbarSubtitle = book.author,
             firstPage = BookDetailsUiState.FistPage(
                 title = book.title,
                 author = book.author,

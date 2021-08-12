@@ -74,6 +74,7 @@ private fun Content(
     Column(Modifier.fillMaxSize()) {
         Toolbar(
             title = state.toolbarTitle,
+            subtitle = state.toolbarSubtitle,
             showBackIcon = true,
             onBackIconClicked = onBackButtonClick
         )
@@ -154,6 +155,7 @@ private fun DetailsScreenPreview() {
             Content(
                 state = BookDetailsUiState(
                     toolbarTitle = "Book's name",
+                    toolbarSubtitle = "Book's author",
                     firstPage = BookDetailsUiState.FistPage(
                         title = "Evgeniy Onegin",
                         author = "Pushkin",

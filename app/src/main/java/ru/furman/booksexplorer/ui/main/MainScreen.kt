@@ -45,7 +45,9 @@ fun MainScreen(
 
         Surface {
             Column(Modifier.fillMaxSize()) {
-                Toolbar(title = stringResource(id = R.string.main_toolbar_title))
+                Toolbar(
+                    title = stringResource(id = R.string.main_toolbar_title)
+                )
                 SwipeRefresh(
                     modifier = Modifier.fillMaxSize(),
                     state = rememberSwipeRefreshState(

@@ -4,6 +4,7 @@ import ru.furman.booksexplorer.model.ui.UiState
 
 data class BookDetailsUiState(
     val toolbarTitle: String,
+    val toolbarSubtitle: String,
     val firstPage: FistPage,
     val secondPage: SecondPage,
     val isFirstPageSelected: Boolean
