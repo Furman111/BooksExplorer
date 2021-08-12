@@ -20,7 +20,7 @@ import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEffect
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiEvent
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
 import ru.furman.booksexplorer.ui.component.BuyButton
-import ru.furman.booksexplorer.ui.component.Toolbar
+import ru.furman.booksexplorer.ui.component.CollapsingSubtitleToolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
@@ -72,7 +72,7 @@ private fun Content(
     onBuyClick: () -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
-        Toolbar(
+        CollapsingSubtitleToolbar(
             title = state.toolbarTitle,
             subtitle = state.toolbarSubtitle,
             showBackIcon = true,

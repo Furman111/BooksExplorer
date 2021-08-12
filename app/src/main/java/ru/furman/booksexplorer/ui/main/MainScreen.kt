@@ -26,8 +26,8 @@ import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.model.ui.books.BooksUiEvent
 import ru.furman.booksexplorer.model.ui.books.BooksUiState
+import ru.furman.booksexplorer.ui.component.CollapsingSubtitleToolbar
 import ru.furman.booksexplorer.ui.component.CommonError
-import ru.furman.booksexplorer.ui.component.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.utils.toolbarOffsetByItem
@@ -48,7 +48,7 @@ fun MainScreen(
 
         Surface {
             Column(Modifier.fillMaxSize()) {
-                Toolbar(
+                CollapsingSubtitleToolbar(
                     title = stringResource(id = R.string.main_toolbar_title),
                     subtitle = stringResource(id = R.string.main_toolbar_subtitle),
                     scrollOffset = toolbarScrollOffset
