@@ -5,6 +5,7 @@
     <string name="search_label">Search</string>
 
     <string name="main_toolbar_title">Books to read</string>
+    <string name="main_toolbar_subtitle">Bestsellers and other books for your pleasure</string>
     <string name="main_carousel_title">Bestsellers</string>
     <string name="main_list_title">All books</string>
     <string name="common_error_title">Oops, something is wrong</string>

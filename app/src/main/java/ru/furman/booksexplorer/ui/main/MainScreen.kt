@@ -30,6 +30,7 @@ import ru.furman.booksexplorer.ui.component.CommonError
 import ru.furman.booksexplorer.ui.component.Toolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 import ru.furman.booksexplorer.utils.StatesOf
+import ru.furman.booksexplorer.utils.toolbarOffsetByItem
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
 
 @ExperimentalFoundationApi
@@ -43,10 +44,14 @@ fun MainScreen(
         val carouselScrollState = rememberLazyListState()
         val lazyListState = rememberLazyListState()
 
+        val toolbarScrollOffset = lazyListState.toolbarOffsetByItem(itemInd = 1)
+
         Surface {
             Column(Modifier.fillMaxSize()) {
                 Toolbar(
-                    title = stringResource(id = R.string.main_toolbar_title)
+                    title = stringResource(id = R.string.main_toolbar_title),
+                    subtitle = stringResource(id = R.string.main_toolbar_subtitle),
+                    scrollOffset = toolbarScrollOffset
                 )
                 SwipeRefresh(
                     modifier = Modifier.fillMaxSize(),

@@ -1,15 +1,18 @@
 package ru.furman.booksexplorer.ui.component
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
 
 @Composable
@@ -17,8 +20,11 @@ fun Toolbar(
     title: String,
     subtitle: String? = null,
     showBackIcon: Boolean = false,
+    scrollOffset: Float = 1f,
     onBackIconClicked: (() -> Unit)? = null
 ) {
+    val subtitleHeight by animateDpAsState(targetValue = max(0.dp, 20.dp * scrollOffset))
+
     Surface(
         Modifier
             .fillMaxWidth(),
@@ -45,12 +51,19 @@ fun Toolbar(
                     style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)
                 )
                 if (subtitle != null) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = subtitle,
-                        style = MaterialTheme.typography.caption
-                    )
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(subtitleHeight)
+                    ) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            text = subtitle,
+                            style = MaterialTheme.typography.caption
+                        )
+                    }
                 }
             }
         }
