@@ -83,22 +83,18 @@ class SearchBooksViewModel @Inject constructor(
                 )
             )
         }
-        viewModelScope.launchSingle(::loadJob, Dispatchers.IO) {
+        viewModelScope.launchSingle(::loadJob) {
             try {
                 val books = booksRepository.searchBooks(request)
-                withContext(Dispatchers.Main) {
-                    setState(
-                        BooksSearchUiState.Stable(
-                            request,
-                            books,
-                            false
-                        )
+                setState(
+                    BooksSearchUiState.Stable(
+                        request,
+                        books,
+                        false
                     )
-                }
+                )
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    setState(BooksSearchUiState.Error(request))
-                }
+                setState(BooksSearchUiState.Error(request))
             }
         }
     }

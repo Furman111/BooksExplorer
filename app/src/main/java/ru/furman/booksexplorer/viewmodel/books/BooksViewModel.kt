@@ -6,9 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.furman.booksexplorer.data.paging.BooksPagingSource
 import ru.furman.booksexplorer.data.repository.BooksRepository
 import ru.furman.booksexplorer.mapper.BooksMapper
@@ -52,17 +50,13 @@ class BooksViewModel @Inject constructor(
 
     private fun loadBooks() {
         setState(booksMapper.getProgressState(booksFlow, currentState))
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 val state = booksMapper.getIdleState(booksFlow, booksRepository.loadBooks())
-                withContext(Dispatchers.Main) {
-                    setState(state)
-                }
+                setState(state)
             } catch (e: Exception) {
                 Log.e("BooksViewModel", e.toString())
-                withContext(Dispatchers.Main) {
-                    setState(BooksUiState.Error)
-                }
+                setState(BooksUiState.Error)
             }
         }
     }

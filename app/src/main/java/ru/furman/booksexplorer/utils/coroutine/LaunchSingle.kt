@@ -9,7 +9,7 @@ import kotlin.reflect.KMutableProperty0
 
 fun CoroutineScope.launchSingle(
     jobProperty: KMutableProperty0<Job?>?,
-    context: CoroutineContext,
+    context: CoroutineContext = coroutineContext,
     block: suspend CoroutineScope.() -> Unit
 ) {
     jobProperty?.get()?.cancel()
