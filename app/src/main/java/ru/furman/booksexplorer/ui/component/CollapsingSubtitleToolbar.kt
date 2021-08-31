@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.unit.max
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.ui.theme.dimensions
 
 @Composable
 fun CollapsingSubtitleToolbar(
@@ -32,15 +33,23 @@ fun CollapsingSubtitleToolbar(
         color = MaterialTheme.colors.primarySurface
     ) {
         Row(
-            modifier = Modifier.defaultMinSize(minHeight = 48.dp),
+            modifier = Modifier.defaultMinSize(
+                minHeight = MaterialTheme.dimensions.toolbarMinHeight
+            ),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (showBackIcon) {
                 BackIcon(onBackIconClicked)
             } else {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(MaterialTheme.dimensions.padding))
             }
-            Column(Modifier.padding(top = 8.dp, bottom = 8.dp, end = 16.dp)) {
+            Column(
+                Modifier.padding(
+                    top = MaterialTheme.dimensions.halfPadding,
+                    bottom = MaterialTheme.dimensions.halfPadding,
+                    end = MaterialTheme.dimensions.padding
+                )
+            ) {
                 ToolbarTitle(title)
                 subtitle?.let { ToolbarSubtitle(subtitle, scrollOffset) }
             }
@@ -59,12 +68,12 @@ private fun ToolbarTitle(title: String) {
 
 @Composable
 private fun BackIcon(onBackIconClicked: (() -> Unit)?) {
-    Spacer(modifier = Modifier.width(4.dp))
+    Spacer(modifier = Modifier.width(MaterialTheme.dimensions.smallPadding))
     IconButton(
         onClick = { onBackIconClicked?.invoke() },
         content = { Icon(Icons.Filled.ArrowBack, contentDescription = null) }
     )
-    Spacer(modifier = Modifier.width(8.dp))
+    Spacer(modifier = Modifier.width(MaterialTheme.dimensions.halfPadding))
 }
 
 @Composable
@@ -84,7 +93,7 @@ private fun ToolbarSubtitle(subtitle: String, scrollOffset: Float) {
             }
             .height(height)
     ) {
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimensions.smallPadding))
         Text(
             modifier = Modifier
                 .fillMaxWidth(),

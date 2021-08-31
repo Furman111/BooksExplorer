@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ru.furman.booksexplorer.R
+import ru.furman.booksexplorer.ui.theme.dimensions
 
 @ExperimentalMaterialApi
 @Composable
@@ -20,8 +21,8 @@ fun BuyBottomSheet(state: ModalBottomSheetState, screenContent: @Composable () -
     ModalBottomSheetLayout(
         sheetState = state,
         sheetShape = MaterialTheme.shapes.large.copy(
-            topStart = CornerSize(16.dp),
-            topEnd = CornerSize(16.dp)
+            topStart = CornerSize(MaterialTheme.dimensions.padding),
+            topEnd = CornerSize(MaterialTheme.dimensions.padding)
         ),
         sheetContent = {
             Box(
@@ -32,7 +33,7 @@ fun BuyBottomSheet(state: ModalBottomSheetState, screenContent: @Composable () -
             ) {
                 Text(
                     text = stringResource(id = R.string.book_details_buy_error),
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(MaterialTheme.dimensions.padding),
                     style = MaterialTheme.typography.subtitle1.copy(
                         color = MaterialTheme.colors.error,
                         fontWeight = FontWeight.Bold

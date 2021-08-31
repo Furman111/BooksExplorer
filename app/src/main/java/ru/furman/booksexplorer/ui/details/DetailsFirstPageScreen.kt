@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.ui.theme.dimensions
 
 @Composable
 fun DetailsFirstPageScreen(
@@ -25,7 +26,7 @@ fun DetailsFirstPageScreen(
     Card(modifier) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(MaterialTheme.dimensions.padding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -40,15 +41,15 @@ fun DetailsFirstPageScreen(
                     contentScale = ContentScale.Crop,
                     contentDescription = null
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(MaterialTheme.dimensions.halfPadding))
                 Column {
                     Text(text = firstPage.title, style = MaterialTheme.typography.h4)
                     Text(text = firstPage.author, style = MaterialTheme.typography.subtitle1)
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimensions.halfPadding))
                     Text(text = firstPage.genre, style = MaterialTheme.typography.subtitle2)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimensions.padding))
             Text(text = firstPage.description, style = MaterialTheme.typography.body1)
         }
     }
@@ -59,7 +60,7 @@ fun DetailsFirstPageScreen(
 fun FirstPageScreenPreview() {
     BooksExplorerTheme {
         DetailsFirstPageScreen(
-            Modifier.padding(16.dp),
+            Modifier.padding(MaterialTheme.dimensions.padding),
             firstPage = BookDetailsUiState.FistPage(
                 title = "Evgeniy Onegin",
                 author = "Pushkin",

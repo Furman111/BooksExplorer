@@ -29,6 +29,7 @@ import ru.furman.booksexplorer.model.ui.books.BooksUiState
 import ru.furman.booksexplorer.ui.component.CollapsingSubtitleToolbar
 import ru.furman.booksexplorer.ui.component.CommonError
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.ui.theme.dimensions
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.utils.toolbarOffsetByItem
 import ru.furman.booksexplorer.viewmodel.books.BooksViewModel
@@ -130,7 +131,12 @@ private fun LazyListScope.lazyListContent(
 
     if (booksPagingItems.loadState.append == LoadState.Loading) {
         item("append_load_progress") {
-            Surface(Modifier.padding(top = 8.dp, bottom = 8.dp)) {
+            Surface(
+                Modifier.padding(
+                    top = MaterialTheme.dimensions.halfPadding,
+                    bottom = MaterialTheme.dimensions.halfPadding
+                )
+            ) {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,7 +154,10 @@ private fun Header(@StringRes textRes: Int) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(
+                    horizontal = MaterialTheme.dimensions.padding,
+                    vertical = MaterialTheme.dimensions.halfPadding
+                ),
             text = LocalContext.current.getString(textRes),
             style = MaterialTheme.typography.subtitle1.copy(
                 color = Color.White,
@@ -170,7 +179,10 @@ private fun BooksCarousel(
             .wrapContentHeight()
             .fillMaxWidth(),
         state = scrollState,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(
+            horizontal = MaterialTheme.dimensions.padding,
+            vertical = MaterialTheme.dimensions.halfPadding
+        ),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(books, key = Book::toString) { book ->
@@ -188,14 +200,14 @@ private fun BooksCarousel(
 fun BookListItem(book: Book, onClick: (book: Book) -> Unit, drawDivider: Boolean) {
     BookVerticalItem(
         modifier = Modifier.padding(
-            horizontal = 16.dp,
-            vertical = 8.dp
+            horizontal = MaterialTheme.dimensions.padding,
+            vertical = MaterialTheme.dimensions.halfPadding
         ),
         book = book,
         onClick = onClick
     )
     if (drawDivider) {
-        Divider(Modifier.padding(start = 16.dp))
+        Divider(Modifier.padding(start = MaterialTheme.dimensions.padding))
     }
 }
 

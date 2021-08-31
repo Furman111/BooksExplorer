@@ -25,6 +25,7 @@ import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
 import ru.furman.booksexplorer.ui.component.BuyButton
 import ru.furman.booksexplorer.ui.component.CollapsingSubtitleToolbar
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.ui.theme.dimensions
 import ru.furman.booksexplorer.utils.CollectEffects
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.utils.toolbarOffsetBy
@@ -82,7 +83,10 @@ private fun Content(
             title = state.toolbarTitle,
             subtitle = state.toolbarSubtitle,
             showBackIcon = true,
-            scrollOffset = pageScrollState.toolbarOffsetBy(16.dp, LocalDensity.current),
+            scrollOffset = pageScrollState.toolbarOffsetBy(
+                MaterialTheme.dimensions.padding,
+                LocalDensity.current
+            ),
             onBackIconClicked = onBackButtonClick
         )
         val pagerState = rememberPagerState(pageCount = 2)
@@ -116,14 +120,14 @@ private fun Content(
                 } else {
                     DetailsSecondPageScreen(
                         Modifier
-                            .padding(16.dp)
+                            .padding(MaterialTheme.dimensions.padding)
                             .fillMaxWidth(),
                         state.secondPage
                     )
                 }
             }
 
-            Box(modifier = Modifier.padding(16.dp)) {
+            Box(modifier = Modifier.padding(MaterialTheme.dimensions.padding)) {
                 BuyButton(Modifier.fillMaxWidth()) {
                     onBuyClick()
                 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import ru.furman.booksexplorer.model.domain.Book
 import ru.furman.booksexplorer.ui.theme.BooksExplorerTheme
+import ru.furman.booksexplorer.ui.theme.dimensions
 
 @ExperimentalMaterialApi
 @Composable
@@ -39,7 +40,7 @@ fun BookHorizontalItem(
     ) {
         Row(
             Modifier
-                .padding(16.dp),
+                .padding(MaterialTheme.dimensions.padding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -60,7 +61,7 @@ fun BookHorizontalItem(
                 Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(start = 8.dp)
+                    .padding(start = MaterialTheme.dimensions.halfPadding)
             ) {
                 Text(
                     text = book.title,

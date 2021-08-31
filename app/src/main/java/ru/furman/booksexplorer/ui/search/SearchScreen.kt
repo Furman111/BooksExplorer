@@ -22,6 +22,7 @@ import ru.furman.booksexplorer.model.ui.search.BooksSearchUiEvent
 import ru.furman.booksexplorer.model.ui.search.BooksSearchUiState
 import ru.furman.booksexplorer.ui.component.CommonError
 import ru.furman.booksexplorer.ui.main.BookListItem
+import ru.furman.booksexplorer.ui.theme.dimensions
 import ru.furman.booksexplorer.utils.StatesOf
 import ru.furman.booksexplorer.viewmodel.search.SearchBooksViewModel
 
@@ -38,7 +39,11 @@ fun SearchScreen(
             Column(Modifier.fillMaxSize()) {
                 SearchInput(state) { viewModel.handleEvent(BooksSearchUiEvent.NewSearchRequest(it)) }
                 when (state) {
-                    is BooksSearchUiState.Stable -> SearchResultList(lazyListState, state, navigateToDetails)
+                    is BooksSearchUiState.Stable -> SearchResultList(
+                        lazyListState,
+                        state,
+                        navigateToDetails
+                    )
                     is BooksSearchUiState.Error -> CommonError(modifier = Modifier.fillMaxSize())
                 }
             }
@@ -56,7 +61,10 @@ private fun SearchResultList(
     LazyColumn(
         state = lazyListState,
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp)
+        contentPadding = PaddingValues(
+            top = MaterialTheme.dimensions.halfPadding,
+            bottom = MaterialTheme.dimensions.halfPadding
+        )
     ) {
         itemsIndexed(
             items = state.books,
@@ -82,7 +90,12 @@ private fun SearchInput(
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 0.dp)
+            .padding(
+                start = MaterialTheme.dimensions.halfPadding,
+                top = MaterialTheme.dimensions.halfPadding,
+                end = MaterialTheme.dimensions.halfPadding,
+                bottom = 0.dp
+            )
             .clipToBounds(),
         value = state.searchRequest,
         onValueChange = onValueChanged,

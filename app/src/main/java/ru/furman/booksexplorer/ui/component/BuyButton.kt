@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.furman.booksexplorer.R
+import ru.furman.booksexplorer.ui.theme.dimensions
 
 @Composable
 fun BuyButton(
@@ -41,7 +41,10 @@ fun BuyButton(
 fun BuyButtonPreview() {
     Box(
         Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(
+                horizontal = MaterialTheme.dimensions.padding,
+                vertical = MaterialTheme.dimensions.halfPadding
+            )
     ) {
         BuyButton(Modifier.fillMaxWidth()) {}
     }

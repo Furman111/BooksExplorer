@@ -15,9 +15,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import ru.furman.booksexplorer.R
 import ru.furman.booksexplorer.model.ui.details.BookDetailsUiState
+import ru.furman.booksexplorer.ui.theme.dimensions
 
 @Composable
 fun DetailsSecondPageScreen(
@@ -27,18 +27,18 @@ fun DetailsSecondPageScreen(
     Card(modifier) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(MaterialTheme.dimensions.padding)
         ) {
             DetailsItem(
                 keyRes = R.string.book_details_isbn,
                 value = secondPage.isbn
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimensions.halfPadding))
             DetailsItem(
                 keyRes = R.string.book_details_published_date,
                 value = secondPage.publishedDate
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimensions.halfPadding))
             DetailsItem(
                 keyRes = R.string.book_details_publisher,
                 value = secondPage.publisher
