@@ -15,10 +15,11 @@ import ru.furman.booksexplorer.model.ui.books.BooksUiState
 import ru.furman.booksexplorer.model.ui.common.EmptyUiEffect
 import ru.furman.booksexplorer.viewmodel.BaseViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
-    private val booksRepository: BooksRepository,
+    @Named("fakeBooks") private val booksRepository: BooksRepository,
     private val booksMapper: BooksMapper
 ) : BaseViewModel<BooksUiState, BooksUiEvent, EmptyUiEffect>() {
 

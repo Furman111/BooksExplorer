@@ -17,10 +17,11 @@ import ru.furman.booksexplorer.model.ui.search.BooksSearchUiState
 import ru.furman.booksexplorer.utils.coroutine.launchSingle
 import ru.furman.booksexplorer.viewmodel.BaseViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class SearchBooksViewModel @Inject constructor(
-    private val booksRepository: BooksRepository
+    @Named("fakeBooks") private val booksRepository: BooksRepository
 ) : BaseViewModel<BooksSearchUiState, BooksSearchUiEvent, EmptyUiEffect>() {
 
     private var loadJob: Job? = null
